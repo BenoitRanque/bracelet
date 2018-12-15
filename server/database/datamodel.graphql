@@ -1,0 +1,43 @@
+
+type User {
+  id: ID! @unique
+  username: String! @unique
+  password: String!
+}
+
+type Bracelet {
+  id: ID! @unique
+  code: String! @unique
+  activation: Activation
+  checks: [Check!]!
+}
+
+type Product {
+  id: ID! @unique
+  name: String! @unique
+  description: String!
+  activations: [Activation!]!
+  checkpoint: Checkpoint!
+  checkLimit: Int
+}
+
+type Checkpoint {
+  id: ID! @unique
+  name: String! @unique
+  products: [Product!]!
+  checks: [Check!]!
+}
+
+type Activation {
+  id: ID! @unique
+  user: User!
+  bracelets: [Bracelet!]!
+  products: [Product!]!
+}
+
+type Check {
+  timestamp: DateTime!
+  bracelet: Bracelet!
+  checkpoint: Checkpoint!
+}
+

@@ -1,0 +1,14 @@
+
+type Mutation {
+  authenticate(username: String!, password: String!): AuthPayload
+}
+
+type AuthPayload {
+  token: String!
+  user: User!
+}
+
+type User {
+  id: ID!
+  username: String!
+}

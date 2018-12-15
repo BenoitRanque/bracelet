@@ -1,0 +1,22 @@
+{
+  "name": "wasp-server",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "license": "MIT",
+  "description": "bracelet server",
+  "repository": "https://github.com/BenoitRanque/bracelet",
+  "dependencies": {
+    "apollo-server": "^2.3.1",
+    "bcryptjs": "^2.4.3",
+    "graphql": "^14.0.2",
+    "graphql-middleware": "^2.0.2",
+    "graphql-yoga": "^1.16.7",
+    "jsonwebtoken": "^8.4.0",
+    "prisma-binding": "^2.2.8",
+    "prisma-client-lib": "^1.22.0"
+  },
+  "devDependencies": {
+    "graphql-cli": "^2.17.0",
+    "prisma": "^1.22.0"
+  }
+}

@@ -1,0 +1,15 @@
+node_modules
+.dockerignore
+.env
+.gitignore
+database
+dist
+docker-compose.override.yml
+docker-compose.yml
+Dockerfile
+graphqlconfig.yml
+prisma.yml
+README.md
+.vscode
+*.log
+.idea

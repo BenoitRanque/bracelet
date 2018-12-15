@@ -1,0 +1,53 @@
+# production configuration. See docker-compose.override.yml from development specific configurations
+version: '3'
+services:
+  server:
+    image: server:prod
+    build:
+      context: .
+      args:
+        NODE_ENV: production
+    ports:
+      - "4000:4000"
+    restart: always
+    environment:
+      NODE_ENV: production
+      PRISMA_ENDPOINT: http://prisma:4466/${PRISMA_SERVICE}/${PRISMA_STAGE}
+      PRISMA_SECRET: ${PRISMA_SECRET}
+      APP_SECRET: ${APP_SECRET}
+    depends_on:
+      - prisma
+  prisma:
+    image: prismagraphql/prisma:1.22
+    restart: always
+    ports:
+      - "4466:4466"
+    environment:
+      PRISMA_CONFIG: |
+        port: 4466
+        managementApiSecret: ${PRISMA_MANAGEMENT_API_SECRET}
+        databases:
+          default:
+            connector: postgres
+            host: ${PG_HOST:-postgres}
+            port: ${PG_PORT:-5432}
+            database: ${PG_DATABASE}
+            user: ${PG_USERNAME}
+            password: ${PG_PASSWORD}
+            migrations: true # allow prisma to change the database structure
+            # connectionLimit: 50
+    depends_on:
+      - postgres
+  postgres:
+    image: postgres:11-alpine # remove this line en unccoment the next one when postgres 10 on docker finally starts working
+    # image: postgres:10-alpine
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: ${PG_DATABASE}
+      POSTGRES_USER: ${PG_USERNAME}
+      POSTGRES_PASSWORD: ${PG_PASSWORD}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - ./data:/var/lib/postgresql/data/pgdata
