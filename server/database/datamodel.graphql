@@ -3,6 +3,8 @@ type User {
   id: ID! @unique
   username: String! @unique
   password: String!
+  createdGroups: [Group!]!
+  activatedGroups: [Activation!]!
 }
 
 type Bracelet {
@@ -13,6 +15,7 @@ type Bracelet {
 }
 
 type Group {
+  owner: User!
   code: String! @unique
   bracelets: [Bracelet!]!
   activation: Activation
@@ -36,8 +39,8 @@ type Checkpoint {
 
 type Activation {
   id: ID! @unique
-  user: User!
-  bracelets: [Bracelet!]!
+  owner: User!
+  groups: [Group!]!
   products: [Product!]!
 }
 

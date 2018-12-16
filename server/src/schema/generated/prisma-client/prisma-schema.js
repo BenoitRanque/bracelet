@@ -2,7 +2,7 @@ module.exports = {
         typeDefs: /* GraphQL */ `type Activation {
   id: ID!
   user: User!
-  bracelets(where: BraceletWhereInput, orderBy: BraceletOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Bracelet!]
+  groups(where: GroupWhereInput, orderBy: GroupOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Group!]
   products(where: ProductWhereInput, orderBy: ProductOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Product!]
 }
 
@@ -14,7 +14,7 @@ type ActivationConnection {
 
 input ActivationCreateInput {
   user: UserCreateOneInput!
-  bracelets: BraceletCreateManyInput
+  groups: GroupCreateManyWithoutActivationInput
   products: ProductCreateManyWithoutActivationsInput
 }
 
@@ -23,14 +23,19 @@ input ActivationCreateManyWithoutProductsInput {
   connect: [ActivationWhereUniqueInput!]
 }
 
-input ActivationCreateOneInput {
-  create: ActivationCreateInput
+input ActivationCreateOneWithoutGroupsInput {
+  create: ActivationCreateWithoutGroupsInput
   connect: ActivationWhereUniqueInput
+}
+
+input ActivationCreateWithoutGroupsInput {
+  user: UserCreateOneInput!
+  products: ProductCreateManyWithoutActivationsInput
 }
 
 input ActivationCreateWithoutProductsInput {
   user: UserCreateOneInput!
-  bracelets: BraceletCreateManyInput
+  groups: GroupCreateManyWithoutActivationInput
 }
 
 type ActivationEdge {
@@ -89,15 +94,9 @@ input ActivationSubscriptionWhereInput {
   NOT: [ActivationSubscriptionWhereInput!]
 }
 
-input ActivationUpdateDataInput {
-  user: UserUpdateOneRequiredInput
-  bracelets: BraceletUpdateManyInput
-  products: ProductUpdateManyWithoutActivationsInput
-}
-
 input ActivationUpdateInput {
   user: UserUpdateOneRequiredInput
-  bracelets: BraceletUpdateManyInput
+  groups: GroupUpdateManyWithoutActivationInput
   products: ProductUpdateManyWithoutActivationsInput
 }
 
@@ -111,18 +110,23 @@ input ActivationUpdateManyWithoutProductsInput {
   deleteMany: [ActivationScalarWhereInput!]
 }
 
-input ActivationUpdateOneInput {
-  create: ActivationCreateInput
-  update: ActivationUpdateDataInput
-  upsert: ActivationUpsertNestedInput
+input ActivationUpdateOneWithoutGroupsInput {
+  create: ActivationCreateWithoutGroupsInput
+  update: ActivationUpdateWithoutGroupsDataInput
+  upsert: ActivationUpsertWithoutGroupsInput
   delete: Boolean
   disconnect: Boolean
   connect: ActivationWhereUniqueInput
 }
 
+input ActivationUpdateWithoutGroupsDataInput {
+  user: UserUpdateOneRequiredInput
+  products: ProductUpdateManyWithoutActivationsInput
+}
+
 input ActivationUpdateWithoutProductsDataInput {
   user: UserUpdateOneRequiredInput
-  bracelets: BraceletUpdateManyInput
+  groups: GroupUpdateManyWithoutActivationInput
 }
 
 input ActivationUpdateWithWhereUniqueWithoutProductsInput {
@@ -130,9 +134,9 @@ input ActivationUpdateWithWhereUniqueWithoutProductsInput {
   data: ActivationUpdateWithoutProductsDataInput!
 }
 
-input ActivationUpsertNestedInput {
-  update: ActivationUpdateDataInput!
-  create: ActivationCreateInput!
+input ActivationUpsertWithoutGroupsInput {
+  update: ActivationUpdateWithoutGroupsDataInput!
+  create: ActivationCreateWithoutGroupsInput!
 }
 
 input ActivationUpsertWithWhereUniqueWithoutProductsInput {
@@ -157,9 +161,9 @@ input ActivationWhereInput {
   id_ends_with: ID
   id_not_ends_with: ID
   user: UserWhereInput
-  bracelets_every: BraceletWhereInput
-  bracelets_some: BraceletWhereInput
-  bracelets_none: BraceletWhereInput
+  groups_every: GroupWhereInput
+  groups_some: GroupWhereInput
+  groups_none: GroupWhereInput
   products_every: ProductWhereInput
   products_some: ProductWhereInput
   products_none: ProductWhereInput
@@ -221,11 +225,6 @@ input BraceletCreateInput {
   code: String!
   group: GroupCreateOneWithoutBraceletsInput!
   checks: CheckCreateManyWithoutBraceletInput
-}
-
-input BraceletCreateManyInput {
-  create: [BraceletCreateInput!]
-  connect: [BraceletWhereUniqueInput!]
 }
 
 input BraceletCreateManyWithoutGroupInput {
@@ -321,12 +320,6 @@ input BraceletSubscriptionWhereInput {
   NOT: [BraceletSubscriptionWhereInput!]
 }
 
-input BraceletUpdateDataInput {
-  code: String
-  group: GroupUpdateOneRequiredWithoutBraceletsInput
-  checks: CheckUpdateManyWithoutBraceletInput
-}
-
 input BraceletUpdateInput {
   code: String
   group: GroupUpdateOneRequiredWithoutBraceletsInput
@@ -335,17 +328,6 @@ input BraceletUpdateInput {
 
 input BraceletUpdateManyDataInput {
   code: String
-}
-
-input BraceletUpdateManyInput {
-  create: [BraceletCreateInput!]
-  update: [BraceletUpdateWithWhereUniqueNestedInput!]
-  upsert: [BraceletUpsertWithWhereUniqueNestedInput!]
-  delete: [BraceletWhereUniqueInput!]
-  connect: [BraceletWhereUniqueInput!]
-  disconnect: [BraceletWhereUniqueInput!]
-  deleteMany: [BraceletScalarWhereInput!]
-  updateMany: [BraceletUpdateManyWithWhereNestedInput!]
 }
 
 input BraceletUpdateManyMutationInput {
@@ -373,20 +355,9 @@ input BraceletUpdateWithoutGroupDataInput {
   checks: CheckUpdateManyWithoutBraceletInput
 }
 
-input BraceletUpdateWithWhereUniqueNestedInput {
-  where: BraceletWhereUniqueInput!
-  data: BraceletUpdateDataInput!
-}
-
 input BraceletUpdateWithWhereUniqueWithoutGroupInput {
   where: BraceletWhereUniqueInput!
   data: BraceletUpdateWithoutGroupDataInput!
-}
-
-input BraceletUpsertWithWhereUniqueNestedInput {
-  where: BraceletWhereUniqueInput!
-  update: BraceletUpdateDataInput!
-  create: BraceletCreateInput!
 }
 
 input BraceletUpsertWithWhereUniqueWithoutGroupInput {
@@ -734,7 +705,12 @@ type GroupConnection {
 input GroupCreateInput {
   code: String!
   bracelets: BraceletCreateManyWithoutGroupInput
-  activation: ActivationCreateOneInput
+  activation: ActivationCreateOneWithoutGroupsInput
+}
+
+input GroupCreateManyWithoutActivationInput {
+  create: [GroupCreateWithoutActivationInput!]
+  connect: [GroupWhereUniqueInput!]
 }
 
 input GroupCreateOneWithoutBraceletsInput {
@@ -742,9 +718,14 @@ input GroupCreateOneWithoutBraceletsInput {
   connect: GroupWhereUniqueInput
 }
 
+input GroupCreateWithoutActivationInput {
+  code: String!
+  bracelets: BraceletCreateManyWithoutGroupInput
+}
+
 input GroupCreateWithoutBraceletsInput {
   code: String!
-  activation: ActivationCreateOneInput
+  activation: ActivationCreateOneWithoutGroupsInput
 }
 
 type GroupEdge {
@@ -765,6 +746,26 @@ enum GroupOrderByInput {
 
 type GroupPreviousValues {
   code: String!
+}
+
+input GroupScalarWhereInput {
+  code: String
+  code_not: String
+  code_in: [String!]
+  code_not_in: [String!]
+  code_lt: String
+  code_lte: String
+  code_gt: String
+  code_gte: String
+  code_contains: String
+  code_not_contains: String
+  code_starts_with: String
+  code_not_starts_with: String
+  code_ends_with: String
+  code_not_ends_with: String
+  AND: [GroupScalarWhereInput!]
+  OR: [GroupScalarWhereInput!]
+  NOT: [GroupScalarWhereInput!]
 }
 
 type GroupSubscriptionPayload {
@@ -788,11 +789,31 @@ input GroupSubscriptionWhereInput {
 input GroupUpdateInput {
   code: String
   bracelets: BraceletUpdateManyWithoutGroupInput
-  activation: ActivationUpdateOneInput
+  activation: ActivationUpdateOneWithoutGroupsInput
+}
+
+input GroupUpdateManyDataInput {
+  code: String
 }
 
 input GroupUpdateManyMutationInput {
   code: String
+}
+
+input GroupUpdateManyWithoutActivationInput {
+  create: [GroupCreateWithoutActivationInput!]
+  delete: [GroupWhereUniqueInput!]
+  connect: [GroupWhereUniqueInput!]
+  disconnect: [GroupWhereUniqueInput!]
+  update: [GroupUpdateWithWhereUniqueWithoutActivationInput!]
+  upsert: [GroupUpsertWithWhereUniqueWithoutActivationInput!]
+  deleteMany: [GroupScalarWhereInput!]
+  updateMany: [GroupUpdateManyWithWhereNestedInput!]
+}
+
+input GroupUpdateManyWithWhereNestedInput {
+  where: GroupScalarWhereInput!
+  data: GroupUpdateManyDataInput!
 }
 
 input GroupUpdateOneRequiredWithoutBraceletsInput {
@@ -802,14 +823,30 @@ input GroupUpdateOneRequiredWithoutBraceletsInput {
   connect: GroupWhereUniqueInput
 }
 
+input GroupUpdateWithoutActivationDataInput {
+  code: String
+  bracelets: BraceletUpdateManyWithoutGroupInput
+}
+
 input GroupUpdateWithoutBraceletsDataInput {
   code: String
-  activation: ActivationUpdateOneInput
+  activation: ActivationUpdateOneWithoutGroupsInput
+}
+
+input GroupUpdateWithWhereUniqueWithoutActivationInput {
+  where: GroupWhereUniqueInput!
+  data: GroupUpdateWithoutActivationDataInput!
 }
 
 input GroupUpsertWithoutBraceletsInput {
   update: GroupUpdateWithoutBraceletsDataInput!
   create: GroupCreateWithoutBraceletsInput!
+}
+
+input GroupUpsertWithWhereUniqueWithoutActivationInput {
+  where: GroupWhereUniqueInput!
+  update: GroupUpdateWithoutActivationDataInput!
+  create: GroupCreateWithoutActivationInput!
 }
 
 input GroupWhereInput {

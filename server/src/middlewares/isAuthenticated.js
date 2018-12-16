@@ -16,6 +16,11 @@ module.exports = {
     sessionUser: isAuthenticated
   },
   Mutation: {
-
+    createUser: isAuthenticated,
+    updateUser: isAuthenticated,
+    createCheckPoint: isAuthenticated,
+    createActivation: isAuthenticated,
+    createBraceletGroups: isAuthenticated,
+    createProduct: isAuthenticated
   }
 }

@@ -1,8 +1,24 @@
-
-
 type Query {
-  # node(id: ID!): Node
-  sessionUser: User
+  sessionUser: User!
+  activation(where: ActivationWhereUniqueInput!): Activation
+  activations(where: ActivationWhereInput, orderBy: ActivationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Activation]!
+  activationsConnection(where: ActivationWhereInput, orderBy: ActivationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ActivationConnection!
+  bracelet(where: BraceletWhereUniqueInput!): Bracelet
+  bracelets(where: BraceletWhereInput, orderBy: BraceletOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Bracelet]!
+  braceletsConnection(where: BraceletWhereInput, orderBy: BraceletOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): BraceletConnection!
+  checks(where: CheckWhereInput, orderBy: CheckOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Check]!
+  checksConnection(where: CheckWhereInput, orderBy: CheckOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): CheckConnection!
+  checkpoint(where: CheckpointWhereUniqueInput!): Checkpoint
+  checkpoints(where: CheckpointWhereInput, orderBy: CheckpointOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Checkpoint]!
+  checkpointsConnection(where: CheckpointWhereInput, orderBy: CheckpointOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): CheckpointConnection!
+  group(where: GroupWhereUniqueInput!): Group
+  groups(where: GroupWhereInput, orderBy: GroupOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Group]!
+  groupsConnection(where: GroupWhereInput, orderBy: GroupOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): GroupConnection!
+  product(where: ProductWhereUniqueInput!): Product
+  products(where: ProductWhereInput, orderBy: ProductOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Product]!
+  productsConnection(where: ProductWhereInput, orderBy: ProductOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ProductConnection!
   user(where: UserWhereUniqueInput!): User
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
+  usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
+  node(id: ID!): Node
 }

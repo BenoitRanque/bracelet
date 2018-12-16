@@ -1,6 +1,58 @@
 
 type Mutation {
-  authenticate(username: String!, password: String!): AuthPayload
+  authenticate(data: AuthInput!): AuthPayload!
+  createUser(data: UserCreateInput!): User!
+  updateUser(data: UserUpdateInput! where: UserWhereUniqueInput!): User!
+  createCheckPoint(data: CheckpointCreateInput!): Checkpoint!
+  createProduct(data: ProductCreateInput!): Product!
+  createBraceletGroups(data: [GroupCreateInput!]!): [Group!]!
+  createActivation(data: ActivationCreateInput!): Activation!
+  createCheck(data: CheckCreateInput!): Check!
+}
+
+input UserCreateInput {
+  username: String!
+  password: String!
+}
+
+input UserUpdateInput {
+  username: String
+  password: String
+}
+
+input GroupCreateInput {
+  code: String!
+  bracelets: [BraceletCreateInput!]!
+}
+
+input BraceletCreateInput {
+  code: String!
+}
+
+input ProductCreateInput {
+  name: String!
+  description: String!
+  checkpoint: CheckpointWhereUniqueInput!
+  checkLimit: Int
+}
+
+input ActivationCreateInput {
+  groups: [GroupWhereUniqueInput!]!
+  products: [ProductWhereUniqueInput!]
+}
+
+input CheckpointCreateInput {
+  name: String!
+}
+
+input CheckCreateInput {
+  bracelet: BraceletWhereUniqueInput!
+  checkpoint: CheckpointWhereUniqueInput!
+}
+
+input AuthInput {
+  username: String!
+  password: String!
 }
 
 type AuthPayload {
