@@ -8,8 +8,14 @@ type User {
 type Bracelet {
   id: ID! @unique
   code: String! @unique
-  activation: Activation
+  group: Group!
   checks: [Check!]!
+}
+
+type Group {
+  code: String! @unique
+  bracelets: [Bracelet!]!
+  activation: Activation
 }
 
 type Product {

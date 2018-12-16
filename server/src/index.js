@@ -1,21 +1,19 @@
-const { GraphQLServer } = require('graphql-yoga')
-const prisma = require('./prisma')
-const { resolvers } = require('./resolvers')
-const middlewares = require('./middlewares')
+const { ApolloServer } = require('apollo-server')
 
-const server = new GraphQLServer({
-  typeDefs: './src/schema/index.graphql',
-  resolvers,
-  middlewares, // disabled auth for development
-  context: req => ({
+const prisma = require('./prisma')
+const schema = require('./schema')
+
+const server = new ApolloServer({
+  schema,
+  context: ({ req }) => ({
     ...req,
     prisma
-  })
+  }),
+  playground: process.env.NODE_ENV === 'development',
+  debug: process.env.NODE_ENV === 'development'
 })
 
-const options = {
-  // only enable playground during development
-  playground: process.env.NODE_ENV === 'development' ? '/' : false
-}
-
-server.start(options, ({ port, endpoint }) => console.log(`Server is running on http://localhost:${port}${endpoint === '/' ? '' : endpoint }`))
+server.listen()
+  .then(({ url, server }) => {
+    console.log(`Server is running on ${url}`)
+  })
