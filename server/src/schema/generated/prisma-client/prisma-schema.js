@@ -1,7 +1,9 @@
 module.exports = {
         typeDefs: /* GraphQL */ `type Activation {
   id: ID!
-  user: User!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  owner: User!
   groups(where: GroupWhereInput, orderBy: GroupOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Group!]
   products(where: ProductWhereInput, orderBy: ProductOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Product!]
 }
@@ -13,9 +15,14 @@ type ActivationConnection {
 }
 
 input ActivationCreateInput {
-  user: UserCreateOneInput!
+  owner: UserCreateOneWithoutActivatedGroupsInput!
   groups: GroupCreateManyWithoutActivationInput
   products: ProductCreateManyWithoutActivationsInput
+}
+
+input ActivationCreateManyWithoutOwnerInput {
+  create: [ActivationCreateWithoutOwnerInput!]
+  connect: [ActivationWhereUniqueInput!]
 }
 
 input ActivationCreateManyWithoutProductsInput {
@@ -29,12 +36,17 @@ input ActivationCreateOneWithoutGroupsInput {
 }
 
 input ActivationCreateWithoutGroupsInput {
-  user: UserCreateOneInput!
+  owner: UserCreateOneWithoutActivatedGroupsInput!
+  products: ProductCreateManyWithoutActivationsInput
+}
+
+input ActivationCreateWithoutOwnerInput {
+  groups: GroupCreateManyWithoutActivationInput
   products: ProductCreateManyWithoutActivationsInput
 }
 
 input ActivationCreateWithoutProductsInput {
-  user: UserCreateOneInput!
+  owner: UserCreateOneWithoutActivatedGroupsInput!
   groups: GroupCreateManyWithoutActivationInput
 }
 
@@ -54,6 +66,8 @@ enum ActivationOrderByInput {
 
 type ActivationPreviousValues {
   id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 input ActivationScalarWhereInput {
@@ -71,6 +85,22 @@ input ActivationScalarWhereInput {
   id_not_starts_with: ID
   id_ends_with: ID
   id_not_ends_with: ID
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
   AND: [ActivationScalarWhereInput!]
   OR: [ActivationScalarWhereInput!]
   NOT: [ActivationScalarWhereInput!]
@@ -95,9 +125,19 @@ input ActivationSubscriptionWhereInput {
 }
 
 input ActivationUpdateInput {
-  user: UserUpdateOneRequiredInput
+  owner: UserUpdateOneRequiredWithoutActivatedGroupsInput
   groups: GroupUpdateManyWithoutActivationInput
   products: ProductUpdateManyWithoutActivationsInput
+}
+
+input ActivationUpdateManyWithoutOwnerInput {
+  create: [ActivationCreateWithoutOwnerInput!]
+  delete: [ActivationWhereUniqueInput!]
+  connect: [ActivationWhereUniqueInput!]
+  disconnect: [ActivationWhereUniqueInput!]
+  update: [ActivationUpdateWithWhereUniqueWithoutOwnerInput!]
+  upsert: [ActivationUpsertWithWhereUniqueWithoutOwnerInput!]
+  deleteMany: [ActivationScalarWhereInput!]
 }
 
 input ActivationUpdateManyWithoutProductsInput {
@@ -120,13 +160,23 @@ input ActivationUpdateOneWithoutGroupsInput {
 }
 
 input ActivationUpdateWithoutGroupsDataInput {
-  user: UserUpdateOneRequiredInput
+  owner: UserUpdateOneRequiredWithoutActivatedGroupsInput
+  products: ProductUpdateManyWithoutActivationsInput
+}
+
+input ActivationUpdateWithoutOwnerDataInput {
+  groups: GroupUpdateManyWithoutActivationInput
   products: ProductUpdateManyWithoutActivationsInput
 }
 
 input ActivationUpdateWithoutProductsDataInput {
-  user: UserUpdateOneRequiredInput
+  owner: UserUpdateOneRequiredWithoutActivatedGroupsInput
   groups: GroupUpdateManyWithoutActivationInput
+}
+
+input ActivationUpdateWithWhereUniqueWithoutOwnerInput {
+  where: ActivationWhereUniqueInput!
+  data: ActivationUpdateWithoutOwnerDataInput!
 }
 
 input ActivationUpdateWithWhereUniqueWithoutProductsInput {
@@ -137,6 +187,12 @@ input ActivationUpdateWithWhereUniqueWithoutProductsInput {
 input ActivationUpsertWithoutGroupsInput {
   update: ActivationUpdateWithoutGroupsDataInput!
   create: ActivationCreateWithoutGroupsInput!
+}
+
+input ActivationUpsertWithWhereUniqueWithoutOwnerInput {
+  where: ActivationWhereUniqueInput!
+  update: ActivationUpdateWithoutOwnerDataInput!
+  create: ActivationCreateWithoutOwnerInput!
 }
 
 input ActivationUpsertWithWhereUniqueWithoutProductsInput {
@@ -160,7 +216,23 @@ input ActivationWhereInput {
   id_not_starts_with: ID
   id_ends_with: ID
   id_not_ends_with: ID
-  user: UserWhereInput
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
+  owner: UserWhereInput
   groups_every: GroupWhereInput
   groups_some: GroupWhereInput
   groups_none: GroupWhereInput
@@ -210,6 +282,8 @@ type BatchPayload {
 
 type Bracelet {
   id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
   code: String!
   group: Group!
   checks(where: CheckWhereInput, orderBy: CheckOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Check!]
@@ -255,16 +329,18 @@ type BraceletEdge {
 enum BraceletOrderByInput {
   id_ASC
   id_DESC
-  code_ASC
-  code_DESC
   createdAt_ASC
   createdAt_DESC
   updatedAt_ASC
   updatedAt_DESC
+  code_ASC
+  code_DESC
 }
 
 type BraceletPreviousValues {
   id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
   code: String!
 }
 
@@ -283,6 +359,22 @@ input BraceletScalarWhereInput {
   id_not_starts_with: ID
   id_ends_with: ID
   id_not_ends_with: ID
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
   code: String
   code_not: String
   code_in: [String!]
@@ -350,6 +442,18 @@ input BraceletUpdateManyWithWhereNestedInput {
   data: BraceletUpdateManyDataInput!
 }
 
+input BraceletUpdateOneRequiredWithoutChecksInput {
+  create: BraceletCreateWithoutChecksInput
+  update: BraceletUpdateWithoutChecksDataInput
+  upsert: BraceletUpsertWithoutChecksInput
+  connect: BraceletWhereUniqueInput
+}
+
+input BraceletUpdateWithoutChecksDataInput {
+  code: String
+  group: GroupUpdateOneRequiredWithoutBraceletsInput
+}
+
 input BraceletUpdateWithoutGroupDataInput {
   code: String
   checks: CheckUpdateManyWithoutBraceletInput
@@ -358,6 +462,11 @@ input BraceletUpdateWithoutGroupDataInput {
 input BraceletUpdateWithWhereUniqueWithoutGroupInput {
   where: BraceletWhereUniqueInput!
   data: BraceletUpdateWithoutGroupDataInput!
+}
+
+input BraceletUpsertWithoutChecksInput {
+  update: BraceletUpdateWithoutChecksDataInput!
+  create: BraceletCreateWithoutChecksInput!
 }
 
 input BraceletUpsertWithWhereUniqueWithoutGroupInput {
@@ -381,6 +490,22 @@ input BraceletWhereInput {
   id_not_starts_with: ID
   id_ends_with: ID
   id_not_ends_with: ID
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
   code: String
   code_not: String
   code_in: [String!]
@@ -410,6 +535,9 @@ input BraceletWhereUniqueInput {
 }
 
 type Check {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
   timestamp: DateTime!
   bracelet: Bracelet!
   checkpoint: Checkpoint!
@@ -429,10 +557,12 @@ input CheckCreateInput {
 
 input CheckCreateManyWithoutBraceletInput {
   create: [CheckCreateWithoutBraceletInput!]
+  connect: [CheckWhereUniqueInput!]
 }
 
 input CheckCreateManyWithoutCheckpointInput {
   create: [CheckCreateWithoutCheckpointInput!]
+  connect: [CheckWhereUniqueInput!]
 }
 
 input CheckCreateWithoutBraceletInput {
@@ -451,18 +581,20 @@ type CheckEdge {
 }
 
 enum CheckOrderByInput {
-  timestamp_ASC
-  timestamp_DESC
   id_ASC
   id_DESC
   createdAt_ASC
   createdAt_DESC
   updatedAt_ASC
   updatedAt_DESC
+  timestamp_ASC
+  timestamp_DESC
 }
 
 type Checkpoint {
   id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
   name: String!
   products(where: ProductWhereInput, orderBy: ProductOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Product!]
   checks(where: CheckWhereInput, orderBy: CheckOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Check!]
@@ -508,16 +640,18 @@ type CheckpointEdge {
 enum CheckpointOrderByInput {
   id_ASC
   id_DESC
-  name_ASC
-  name_DESC
   createdAt_ASC
   createdAt_DESC
   updatedAt_ASC
   updatedAt_DESC
+  name_ASC
+  name_DESC
 }
 
 type CheckpointPreviousValues {
   id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
   name: String!
 }
 
@@ -549,6 +683,13 @@ input CheckpointUpdateManyMutationInput {
   name: String
 }
 
+input CheckpointUpdateOneRequiredWithoutChecksInput {
+  create: CheckpointCreateWithoutChecksInput
+  update: CheckpointUpdateWithoutChecksDataInput
+  upsert: CheckpointUpsertWithoutChecksInput
+  connect: CheckpointWhereUniqueInput
+}
+
 input CheckpointUpdateOneRequiredWithoutProductsInput {
   create: CheckpointCreateWithoutProductsInput
   update: CheckpointUpdateWithoutProductsDataInput
@@ -556,9 +697,19 @@ input CheckpointUpdateOneRequiredWithoutProductsInput {
   connect: CheckpointWhereUniqueInput
 }
 
+input CheckpointUpdateWithoutChecksDataInput {
+  name: String
+  products: ProductUpdateManyWithoutCheckpointInput
+}
+
 input CheckpointUpdateWithoutProductsDataInput {
   name: String
   checks: CheckUpdateManyWithoutCheckpointInput
+}
+
+input CheckpointUpsertWithoutChecksInput {
+  update: CheckpointUpdateWithoutChecksDataInput!
+  create: CheckpointCreateWithoutChecksInput!
 }
 
 input CheckpointUpsertWithoutProductsInput {
@@ -581,6 +732,22 @@ input CheckpointWhereInput {
   id_not_starts_with: ID
   id_ends_with: ID
   id_not_ends_with: ID
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
   name: String
   name_not: String
   name_in: [String!]
@@ -612,10 +779,43 @@ input CheckpointWhereUniqueInput {
 }
 
 type CheckPreviousValues {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
   timestamp: DateTime!
 }
 
 input CheckScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
   timestamp: DateTime
   timestamp_not: DateTime
   timestamp_in: [DateTime!]
@@ -647,6 +847,12 @@ input CheckSubscriptionWhereInput {
   NOT: [CheckSubscriptionWhereInput!]
 }
 
+input CheckUpdateInput {
+  timestamp: DateTime
+  bracelet: BraceletUpdateOneRequiredWithoutChecksInput
+  checkpoint: CheckpointUpdateOneRequiredWithoutChecksInput
+}
+
 input CheckUpdateManyDataInput {
   timestamp: DateTime
 }
@@ -657,12 +863,22 @@ input CheckUpdateManyMutationInput {
 
 input CheckUpdateManyWithoutBraceletInput {
   create: [CheckCreateWithoutBraceletInput!]
+  delete: [CheckWhereUniqueInput!]
+  connect: [CheckWhereUniqueInput!]
+  disconnect: [CheckWhereUniqueInput!]
+  update: [CheckUpdateWithWhereUniqueWithoutBraceletInput!]
+  upsert: [CheckUpsertWithWhereUniqueWithoutBraceletInput!]
   deleteMany: [CheckScalarWhereInput!]
   updateMany: [CheckUpdateManyWithWhereNestedInput!]
 }
 
 input CheckUpdateManyWithoutCheckpointInput {
   create: [CheckCreateWithoutCheckpointInput!]
+  delete: [CheckWhereUniqueInput!]
+  connect: [CheckWhereUniqueInput!]
+  disconnect: [CheckWhereUniqueInput!]
+  update: [CheckUpdateWithWhereUniqueWithoutCheckpointInput!]
+  upsert: [CheckUpsertWithWhereUniqueWithoutCheckpointInput!]
   deleteMany: [CheckScalarWhereInput!]
   updateMany: [CheckUpdateManyWithWhereNestedInput!]
 }
@@ -672,7 +888,69 @@ input CheckUpdateManyWithWhereNestedInput {
   data: CheckUpdateManyDataInput!
 }
 
+input CheckUpdateWithoutBraceletDataInput {
+  timestamp: DateTime
+  checkpoint: CheckpointUpdateOneRequiredWithoutChecksInput
+}
+
+input CheckUpdateWithoutCheckpointDataInput {
+  timestamp: DateTime
+  bracelet: BraceletUpdateOneRequiredWithoutChecksInput
+}
+
+input CheckUpdateWithWhereUniqueWithoutBraceletInput {
+  where: CheckWhereUniqueInput!
+  data: CheckUpdateWithoutBraceletDataInput!
+}
+
+input CheckUpdateWithWhereUniqueWithoutCheckpointInput {
+  where: CheckWhereUniqueInput!
+  data: CheckUpdateWithoutCheckpointDataInput!
+}
+
+input CheckUpsertWithWhereUniqueWithoutBraceletInput {
+  where: CheckWhereUniqueInput!
+  update: CheckUpdateWithoutBraceletDataInput!
+  create: CheckCreateWithoutBraceletInput!
+}
+
+input CheckUpsertWithWhereUniqueWithoutCheckpointInput {
+  where: CheckWhereUniqueInput!
+  update: CheckUpdateWithoutCheckpointDataInput!
+  create: CheckCreateWithoutCheckpointInput!
+}
+
 input CheckWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
   timestamp: DateTime
   timestamp_not: DateTime
   timestamp_in: [DateTime!]
@@ -688,9 +966,17 @@ input CheckWhereInput {
   NOT: [CheckWhereInput!]
 }
 
+input CheckWhereUniqueInput {
+  id: ID
+}
+
 scalar DateTime
 
 type Group {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  owner: User!
   code: String!
   bracelets(where: BraceletWhereInput, orderBy: BraceletOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Bracelet!]
   activation: Activation
@@ -703,6 +989,7 @@ type GroupConnection {
 }
 
 input GroupCreateInput {
+  owner: UserCreateOneWithoutCreatedGroupsInput!
   code: String!
   bracelets: BraceletCreateManyWithoutGroupInput
   activation: ActivationCreateOneWithoutGroupsInput
@@ -713,18 +1000,31 @@ input GroupCreateManyWithoutActivationInput {
   connect: [GroupWhereUniqueInput!]
 }
 
+input GroupCreateManyWithoutOwnerInput {
+  create: [GroupCreateWithoutOwnerInput!]
+  connect: [GroupWhereUniqueInput!]
+}
+
 input GroupCreateOneWithoutBraceletsInput {
   create: GroupCreateWithoutBraceletsInput
   connect: GroupWhereUniqueInput
 }
 
 input GroupCreateWithoutActivationInput {
+  owner: UserCreateOneWithoutCreatedGroupsInput!
   code: String!
   bracelets: BraceletCreateManyWithoutGroupInput
 }
 
 input GroupCreateWithoutBraceletsInput {
+  owner: UserCreateOneWithoutCreatedGroupsInput!
   code: String!
+  activation: ActivationCreateOneWithoutGroupsInput
+}
+
+input GroupCreateWithoutOwnerInput {
+  code: String!
+  bracelets: BraceletCreateManyWithoutGroupInput
   activation: ActivationCreateOneWithoutGroupsInput
 }
 
@@ -734,21 +1034,54 @@ type GroupEdge {
 }
 
 enum GroupOrderByInput {
-  code_ASC
-  code_DESC
   id_ASC
   id_DESC
   createdAt_ASC
   createdAt_DESC
   updatedAt_ASC
   updatedAt_DESC
+  code_ASC
+  code_DESC
 }
 
 type GroupPreviousValues {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
   code: String!
 }
 
 input GroupScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
   code: String
   code_not: String
   code_in: [String!]
@@ -787,6 +1120,7 @@ input GroupSubscriptionWhereInput {
 }
 
 input GroupUpdateInput {
+  owner: UserUpdateOneRequiredWithoutCreatedGroupsInput
   code: String
   bracelets: BraceletUpdateManyWithoutGroupInput
   activation: ActivationUpdateOneWithoutGroupsInput
@@ -811,6 +1145,17 @@ input GroupUpdateManyWithoutActivationInput {
   updateMany: [GroupUpdateManyWithWhereNestedInput!]
 }
 
+input GroupUpdateManyWithoutOwnerInput {
+  create: [GroupCreateWithoutOwnerInput!]
+  delete: [GroupWhereUniqueInput!]
+  connect: [GroupWhereUniqueInput!]
+  disconnect: [GroupWhereUniqueInput!]
+  update: [GroupUpdateWithWhereUniqueWithoutOwnerInput!]
+  upsert: [GroupUpsertWithWhereUniqueWithoutOwnerInput!]
+  deleteMany: [GroupScalarWhereInput!]
+  updateMany: [GroupUpdateManyWithWhereNestedInput!]
+}
+
 input GroupUpdateManyWithWhereNestedInput {
   where: GroupScalarWhereInput!
   data: GroupUpdateManyDataInput!
@@ -824,18 +1169,31 @@ input GroupUpdateOneRequiredWithoutBraceletsInput {
 }
 
 input GroupUpdateWithoutActivationDataInput {
+  owner: UserUpdateOneRequiredWithoutCreatedGroupsInput
   code: String
   bracelets: BraceletUpdateManyWithoutGroupInput
 }
 
 input GroupUpdateWithoutBraceletsDataInput {
+  owner: UserUpdateOneRequiredWithoutCreatedGroupsInput
   code: String
+  activation: ActivationUpdateOneWithoutGroupsInput
+}
+
+input GroupUpdateWithoutOwnerDataInput {
+  code: String
+  bracelets: BraceletUpdateManyWithoutGroupInput
   activation: ActivationUpdateOneWithoutGroupsInput
 }
 
 input GroupUpdateWithWhereUniqueWithoutActivationInput {
   where: GroupWhereUniqueInput!
   data: GroupUpdateWithoutActivationDataInput!
+}
+
+input GroupUpdateWithWhereUniqueWithoutOwnerInput {
+  where: GroupWhereUniqueInput!
+  data: GroupUpdateWithoutOwnerDataInput!
 }
 
 input GroupUpsertWithoutBraceletsInput {
@@ -849,7 +1207,44 @@ input GroupUpsertWithWhereUniqueWithoutActivationInput {
   create: GroupCreateWithoutActivationInput!
 }
 
+input GroupUpsertWithWhereUniqueWithoutOwnerInput {
+  where: GroupWhereUniqueInput!
+  update: GroupUpdateWithoutOwnerDataInput!
+  create: GroupCreateWithoutOwnerInput!
+}
+
 input GroupWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
+  owner: UserWhereInput
   code: String
   code_not: String
   code_in: [String!]
@@ -874,6 +1269,7 @@ input GroupWhereInput {
 }
 
 input GroupWhereUniqueInput {
+  id: ID
   code: String
 }
 
@@ -892,7 +1288,10 @@ type Mutation {
   deleteBracelet(where: BraceletWhereUniqueInput!): Bracelet
   deleteManyBracelets(where: BraceletWhereInput): BatchPayload!
   createCheck(data: CheckCreateInput!): Check!
+  updateCheck(data: CheckUpdateInput!, where: CheckWhereUniqueInput!): Check
   updateManyChecks(data: CheckUpdateManyMutationInput!, where: CheckWhereInput): BatchPayload!
+  upsertCheck(where: CheckWhereUniqueInput!, create: CheckCreateInput!, update: CheckUpdateInput!): Check!
+  deleteCheck(where: CheckWhereUniqueInput!): Check
   deleteManyChecks(where: CheckWhereInput): BatchPayload!
   createCheckpoint(data: CheckpointCreateInput!): Checkpoint!
   updateCheckpoint(data: CheckpointUpdateInput!, where: CheckpointWhereUniqueInput!): Checkpoint
@@ -943,7 +1342,7 @@ type Product {
   description: String!
   activations(where: ActivationWhereInput, orderBy: ActivationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Activation!]
   checkpoint: Checkpoint!
-  checkLimit: Int
+  checklimit: Int
 }
 
 type ProductConnection {
@@ -957,7 +1356,7 @@ input ProductCreateInput {
   description: String!
   activations: ActivationCreateManyWithoutProductsInput
   checkpoint: CheckpointCreateOneWithoutProductsInput!
-  checkLimit: Int
+  checklimit: Int
 }
 
 input ProductCreateManyWithoutActivationsInput {
@@ -974,14 +1373,14 @@ input ProductCreateWithoutActivationsInput {
   name: String!
   description: String!
   checkpoint: CheckpointCreateOneWithoutProductsInput!
-  checkLimit: Int
+  checklimit: Int
 }
 
 input ProductCreateWithoutCheckpointInput {
   name: String!
   description: String!
   activations: ActivationCreateManyWithoutProductsInput
-  checkLimit: Int
+  checklimit: Int
 }
 
 type ProductEdge {
@@ -996,8 +1395,8 @@ enum ProductOrderByInput {
   name_DESC
   description_ASC
   description_DESC
-  checkLimit_ASC
-  checkLimit_DESC
+  checklimit_ASC
+  checklimit_DESC
   createdAt_ASC
   createdAt_DESC
   updatedAt_ASC
@@ -1008,7 +1407,7 @@ type ProductPreviousValues {
   id: ID!
   name: String!
   description: String!
-  checkLimit: Int
+  checklimit: Int
 }
 
 input ProductScalarWhereInput {
@@ -1054,14 +1453,14 @@ input ProductScalarWhereInput {
   description_not_starts_with: String
   description_ends_with: String
   description_not_ends_with: String
-  checkLimit: Int
-  checkLimit_not: Int
-  checkLimit_in: [Int!]
-  checkLimit_not_in: [Int!]
-  checkLimit_lt: Int
-  checkLimit_lte: Int
-  checkLimit_gt: Int
-  checkLimit_gte: Int
+  checklimit: Int
+  checklimit_not: Int
+  checklimit_in: [Int!]
+  checklimit_not_in: [Int!]
+  checklimit_lt: Int
+  checklimit_lte: Int
+  checklimit_gt: Int
+  checklimit_gte: Int
   AND: [ProductScalarWhereInput!]
   OR: [ProductScalarWhereInput!]
   NOT: [ProductScalarWhereInput!]
@@ -1090,19 +1489,19 @@ input ProductUpdateInput {
   description: String
   activations: ActivationUpdateManyWithoutProductsInput
   checkpoint: CheckpointUpdateOneRequiredWithoutProductsInput
-  checkLimit: Int
+  checklimit: Int
 }
 
 input ProductUpdateManyDataInput {
   name: String
   description: String
-  checkLimit: Int
+  checklimit: Int
 }
 
 input ProductUpdateManyMutationInput {
   name: String
   description: String
-  checkLimit: Int
+  checklimit: Int
 }
 
 input ProductUpdateManyWithoutActivationsInput {
@@ -1136,14 +1535,14 @@ input ProductUpdateWithoutActivationsDataInput {
   name: String
   description: String
   checkpoint: CheckpointUpdateOneRequiredWithoutProductsInput
-  checkLimit: Int
+  checklimit: Int
 }
 
 input ProductUpdateWithoutCheckpointDataInput {
   name: String
   description: String
   activations: ActivationUpdateManyWithoutProductsInput
-  checkLimit: Int
+  checklimit: Int
 }
 
 input ProductUpdateWithWhereUniqueWithoutActivationsInput {
@@ -1215,14 +1614,14 @@ input ProductWhereInput {
   activations_some: ActivationWhereInput
   activations_none: ActivationWhereInput
   checkpoint: CheckpointWhereInput
-  checkLimit: Int
-  checkLimit_not: Int
-  checkLimit_in: [Int!]
-  checkLimit_not_in: [Int!]
-  checkLimit_lt: Int
-  checkLimit_lte: Int
-  checkLimit_gt: Int
-  checkLimit_gte: Int
+  checklimit: Int
+  checklimit_not: Int
+  checklimit_in: [Int!]
+  checklimit_not_in: [Int!]
+  checklimit_lt: Int
+  checklimit_lte: Int
+  checklimit_gt: Int
+  checklimit_gte: Int
   AND: [ProductWhereInput!]
   OR: [ProductWhereInput!]
   NOT: [ProductWhereInput!]
@@ -1240,6 +1639,7 @@ type Query {
   bracelet(where: BraceletWhereUniqueInput!): Bracelet
   bracelets(where: BraceletWhereInput, orderBy: BraceletOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Bracelet]!
   braceletsConnection(where: BraceletWhereInput, orderBy: BraceletOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): BraceletConnection!
+  check(where: CheckWhereUniqueInput!): Check
   checks(where: CheckWhereInput, orderBy: CheckOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Check]!
   checksConnection(where: CheckWhereInput, orderBy: CheckOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): CheckConnection!
   checkpoint(where: CheckpointWhereUniqueInput!): Checkpoint
@@ -1269,8 +1669,12 @@ type Subscription {
 
 type User {
   id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
   username: String!
   password: String!
+  createdGroups(where: GroupWhereInput, orderBy: GroupOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Group!]
+  activatedGroups(where: ActivationWhereInput, orderBy: ActivationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Activation!]
 }
 
 type UserConnection {
@@ -1282,11 +1686,30 @@ type UserConnection {
 input UserCreateInput {
   username: String!
   password: String!
+  createdGroups: GroupCreateManyWithoutOwnerInput
+  activatedGroups: ActivationCreateManyWithoutOwnerInput
 }
 
-input UserCreateOneInput {
-  create: UserCreateInput
+input UserCreateOneWithoutActivatedGroupsInput {
+  create: UserCreateWithoutActivatedGroupsInput
   connect: UserWhereUniqueInput
+}
+
+input UserCreateOneWithoutCreatedGroupsInput {
+  create: UserCreateWithoutCreatedGroupsInput
+  connect: UserWhereUniqueInput
+}
+
+input UserCreateWithoutActivatedGroupsInput {
+  username: String!
+  password: String!
+  createdGroups: GroupCreateManyWithoutOwnerInput
+}
+
+input UserCreateWithoutCreatedGroupsInput {
+  username: String!
+  password: String!
+  activatedGroups: ActivationCreateManyWithoutOwnerInput
 }
 
 type UserEdge {
@@ -1297,18 +1720,20 @@ type UserEdge {
 enum UserOrderByInput {
   id_ASC
   id_DESC
-  username_ASC
-  username_DESC
-  password_ASC
-  password_DESC
   createdAt_ASC
   createdAt_DESC
   updatedAt_ASC
   updatedAt_DESC
+  username_ASC
+  username_DESC
+  password_ASC
+  password_DESC
 }
 
 type UserPreviousValues {
   id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
   username: String!
   password: String!
 }
@@ -1331,14 +1756,11 @@ input UserSubscriptionWhereInput {
   NOT: [UserSubscriptionWhereInput!]
 }
 
-input UserUpdateDataInput {
-  username: String
-  password: String
-}
-
 input UserUpdateInput {
   username: String
   password: String
+  createdGroups: GroupUpdateManyWithoutOwnerInput
+  activatedGroups: ActivationUpdateManyWithoutOwnerInput
 }
 
 input UserUpdateManyMutationInput {
@@ -1346,16 +1768,40 @@ input UserUpdateManyMutationInput {
   password: String
 }
 
-input UserUpdateOneRequiredInput {
-  create: UserCreateInput
-  update: UserUpdateDataInput
-  upsert: UserUpsertNestedInput
+input UserUpdateOneRequiredWithoutActivatedGroupsInput {
+  create: UserCreateWithoutActivatedGroupsInput
+  update: UserUpdateWithoutActivatedGroupsDataInput
+  upsert: UserUpsertWithoutActivatedGroupsInput
   connect: UserWhereUniqueInput
 }
 
-input UserUpsertNestedInput {
-  update: UserUpdateDataInput!
-  create: UserCreateInput!
+input UserUpdateOneRequiredWithoutCreatedGroupsInput {
+  create: UserCreateWithoutCreatedGroupsInput
+  update: UserUpdateWithoutCreatedGroupsDataInput
+  upsert: UserUpsertWithoutCreatedGroupsInput
+  connect: UserWhereUniqueInput
+}
+
+input UserUpdateWithoutActivatedGroupsDataInput {
+  username: String
+  password: String
+  createdGroups: GroupUpdateManyWithoutOwnerInput
+}
+
+input UserUpdateWithoutCreatedGroupsDataInput {
+  username: String
+  password: String
+  activatedGroups: ActivationUpdateManyWithoutOwnerInput
+}
+
+input UserUpsertWithoutActivatedGroupsInput {
+  update: UserUpdateWithoutActivatedGroupsDataInput!
+  create: UserCreateWithoutActivatedGroupsInput!
+}
+
+input UserUpsertWithoutCreatedGroupsInput {
+  update: UserUpdateWithoutCreatedGroupsDataInput!
+  create: UserCreateWithoutCreatedGroupsInput!
 }
 
 input UserWhereInput {
@@ -1373,6 +1819,22 @@ input UserWhereInput {
   id_not_starts_with: ID
   id_ends_with: ID
   id_not_ends_with: ID
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
   username: String
   username_not: String
   username_in: [String!]
@@ -1401,6 +1863,12 @@ input UserWhereInput {
   password_not_starts_with: String
   password_ends_with: String
   password_not_ends_with: String
+  createdGroups_every: GroupWhereInput
+  createdGroups_some: GroupWhereInput
+  createdGroups_none: GroupWhereInput
+  activatedGroups_every: ActivationWhereInput
+  activatedGroups_some: ActivationWhereInput
+  activatedGroups_none: ActivationWhereInput
   AND: [UserWhereInput!]
   OR: [UserWhereInput!]
   NOT: [UserWhereInput!]

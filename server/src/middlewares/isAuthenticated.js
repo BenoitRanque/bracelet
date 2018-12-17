@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken')
 const { APP_SECRET } = require('../utils')
 
 function isAuthenticated (resolve, obj, args, ctx, info) {
+  console.log(ctx)
   const Authorization = ctx.request.get('Authorization')
   if (Authorization) {
     const token = Authorization.replace('Bearer ', '')
@@ -18,9 +19,9 @@ module.exports = {
   Mutation: {
     createUser: isAuthenticated,
     updateUser: isAuthenticated,
-    createCheckPoint: isAuthenticated,
+    createCheckpoint: isAuthenticated,
     createActivation: isAuthenticated,
-    createBraceletGroups: isAuthenticated,
+    createGroup: isAuthenticated,
     createProduct: isAuthenticated
   }
 }

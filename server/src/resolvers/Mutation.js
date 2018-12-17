@@ -1,11 +1,13 @@
+const startOfDay = require('date-fns/start_of_day')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const { APP_SECRET, BCRYPT_SALT_ROUNDS, getUserId } = require('../utils')
 
 async function authenticate(obj, args, ctx, info) {
-  const user = await ctx.prisma.bindings.query.user({ where: { username: args.username } }, `{ id password }`)
+  const { username, password } = args.data
+  const user = await ctx.prisma.client.user({ username })
   if (user) {
-    const valid = await bcrypt.compare(args.password, user.password)
+    const valid = await bcrypt.compare(password, user.password)
     if (valid) {
       return {
         user,
@@ -17,7 +19,7 @@ async function authenticate(obj, args, ctx, info) {
 }
 
 async function createProduct (obj, args, ctx, info) {
-  return ctx.prisma.bindings.createProduct({
+  return ctx.prisma.bindings.mutation.createProduct({
     data: {
       ...args.data,
       checkpoint: {
@@ -26,22 +28,132 @@ async function createProduct (obj, args, ctx, info) {
     }
   }, info)
 }
-async function createBraceletGroups (obj, args, ctx, info) {
-  return await Promise.all(args.data.map(group => ctx.prisma.bindings.create))
+
+async function createGroup (obj, args, ctx, info) {
+  const userId = getUserId(ctx)
+  return ctx.prisma.bindings.mutation.createGroup({
+    data: {
+      ...args.data,
+      bracelets: {
+        create: args.data.bracelets
+      },
+      owner: {
+        connect: {
+          id: userId
+        }
+      }
+    }
+  }, info)
 }
+
 async function createActivation (obj, args, ctx, info) {
+  const userId = getUserId(ctx)
+  return ctx.prisma.bindings.mutation.createActivation({
+    data: {
+      groups: {
+        connect: args.data.groups
+      },
+      products: {
+        connect: args.data.products
+      },
+      owner: {
+        connect: {
+          id: userId
+        }
+      }
+    }
+  }, info)
 }
+
 async function createCheck (obj, args, ctx, info) {
 
+  const { bracelet, checkpoint } = args.data
+  // Check if bracelet exists
+
+  const [
+    exists,
+    checksOnPreviousDatesCount,
+    isActivated,
+    isActivatedForCheckpoint,
+    checksAtCheckpointCount,
+    activatedProducts
+  ] = await Promise.all([
+    ctx.prisma.client.$exists.bracelet(bracelet),
+    ctx.prisma.client.checksConnection({
+      bracelet,
+      timestamp_lt: startOfDay(new Date())
+    }).aggregate().count(),
+    ctx.prisma.client.$exists.bracelet({
+      ...bracelet,
+      group: {
+        activation: {
+          id_not: null
+        }
+      }
+    }),
+    ctx.prisma.client.$exists.bracelet({
+      ...bracelet,
+      group: {
+        activation: {
+          products_some: {
+            checkpoint
+          }
+        }
+      }
+    }),
+    ctx.prisma.client.checksConnection({
+      bracelet,
+      checkpoint
+    }).aggregate().count(),
+    ctx.prisma.client.products({
+      where: {
+        checkpoint,
+        activations_some: {
+          groups_some: {
+            bracelets_some: bracelet
+          }
+        }
+      }
+    })
+  ])
+
+  // console.log(exists,
+  //   checksOnPreviousDatesCount,
+  //   isActivated,
+  //   isActivatedForCheckpoint,
+  //   checksAtCheckpointCount,
+  //   activatedProducts)
+
+  if (!exists) throw new Error(`Manilla ${bracelet} no existe`)
+  if (checksOnPreviousDatesCount > 0) throw new Error(`Manilla ${bracelet} ya fue utilizada en fechas anteriores`)
+  if (!isActivated) throw new Error(`Manilla ${bracelet} no activada`)
+  if (!isActivatedForCheckpoint) throw new Error(`Manilla ${bracelet} no cuenta con producto para este punto de control`)
+
+  const checkLimitForCheckpoint = activatedProducts
+    .reduce((maxChecklimit, { checklimit }) => (checklimit === null || (maxChecklimit !== null && checklimit > maxChecklimi)) ? checklimit : maxChecklimit, 0)
+
+  if (checksAtCheckpointCount >= checkLimitForCheckpoint) throw new Error(`Cantidad de registros para manilla ${bracelet} en punto de control ${checkpoint} exedida`)
+
+  return ctx.prisma.bindings.mutation.createCheck({
+    data: {
+      bracelet: {
+        connect: args.data.bracelet
+      },
+      checkpoint: {
+        connect: args.data.checkpoint
+      },
+      timestamp: new Date()
+    }
+  }, info)
 }
 
 module.exports = {
-  createUser: (obj, args, ctx, info) => ctx.prisma.createUser(args, info),
-  authenticate: (obj, args, ctx, info) => ctx.prisma.authenticate(args, info),
-  updateUser: (obj, args, ctx, info) => ctx.prisma.updateUser(args, info),
-  createCheck: (obj, args, ctx, info) => ctx.prisma.createCheck(args, info),
-  createCheckpoint: (obj, args, ctx, info) => ctx.prisma.createCheckpoint(args, info),
-  createActivation: (obj, args, ctx, info) => ctx.prisma.createActivation(args, info),
-  createBraceletGroups: (obj, args, ctx, info) => ctx.prisma.createBraceletGroups(args, info),
-  createProduct: (obj, args, ctx, info) => ctx.prisma.createProduct(args, info)
+  createUser: (obj, args, ctx, info) => ctx.prisma.bindings.mutation.createUser(args, info),
+  updateUser: (obj, args, ctx, info) => ctx.prisma.bindings.mutation.updateUser(args, info),
+  createCheckpoint: (obj, args, ctx, info) => ctx.prisma.bindings.mutation.createCheckpoint(args, info),
+  authenticate,
+  createCheck,
+  createActivation,
+  createGroup,
+  createProduct
 }

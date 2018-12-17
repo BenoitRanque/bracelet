@@ -1,6 +1,8 @@
 
 type User {
   id: ID! @unique
+  createdAt: DateTime!
+  updatedAt: DateTime!
   username: String! @unique
   password: String!
   createdGroups: [Group!]!
@@ -9,12 +11,17 @@ type User {
 
 type Bracelet {
   id: ID! @unique
+  createdAt: DateTime!
+  updatedAt: DateTime!
   code: String! @unique
   group: Group!
   checks: [Check!]!
 }
 
 type Group {
+  id: ID! @unique
+  createdAt: DateTime!
+  updatedAt: DateTime!
   owner: User!
   code: String! @unique
   bracelets: [Bracelet!]!
@@ -27,11 +34,13 @@ type Product {
   description: String!
   activations: [Activation!]!
   checkpoint: Checkpoint!
-  checkLimit: Int
+  checklimit: Int
 }
 
 type Checkpoint {
   id: ID! @unique
+  createdAt: DateTime!
+  updatedAt: DateTime!
   name: String! @unique
   products: [Product!]!
   checks: [Check!]!
@@ -39,12 +48,17 @@ type Checkpoint {
 
 type Activation {
   id: ID! @unique
+  createdAt: DateTime!
+  updatedAt: DateTime!
   owner: User!
   groups: [Group!]!
   products: [Product!]!
 }
 
 type Check {
+  id: ID! @unique
+  createdAt: DateTime!
+  updatedAt: DateTime!
   timestamp: DateTime!
   bracelet: Bracelet!
   checkpoint: Checkpoint!

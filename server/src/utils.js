@@ -3,13 +3,11 @@ const APP_SECRET = process.env.APP_SECRET
 const BCRYPT_SALT_ROUNDS = Number(process.env.BCRYPT_SALT_ROUNDS)
 
 function getUserId(context) {
-  const Authorization = context.request.get('Authorization')
-  if (Authorization) {
-    const token = Authorization.replace('Bearer ', '')
-    const { userId } = jwt.verify(token, APP_SECRET)
-    return userId
+  try {
+    return context.session.user.id
+  } catch (error) {
+    throw new Error(`Cannot retreive user id if there is no session`)
   }
-  throw new Error('Not authenticated')
 }
 
 module.exports = {

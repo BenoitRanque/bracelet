@@ -84,6 +84,7 @@ export interface Prisma {
       last?: Int;
     }
   ) => BraceletConnectionPromise;
+  check: (where: CheckWhereUniqueInput) => CheckPromise;
   checks: (
     args?: {
       where?: CheckWhereInput;
@@ -234,9 +235,20 @@ export interface Prisma {
   deleteBracelet: (where: BraceletWhereUniqueInput) => BraceletPromise;
   deleteManyBracelets: (where?: BraceletWhereInput) => BatchPayloadPromise;
   createCheck: (data: CheckCreateInput) => CheckPromise;
+  updateCheck: (
+    args: { data: CheckUpdateInput; where: CheckWhereUniqueInput }
+  ) => CheckPromise;
   updateManyChecks: (
     args: { data: CheckUpdateManyMutationInput; where?: CheckWhereInput }
   ) => BatchPayloadPromise;
+  upsertCheck: (
+    args: {
+      where: CheckWhereUniqueInput;
+      create: CheckCreateInput;
+      update: CheckUpdateInput;
+    }
+  ) => CheckPromise;
+  deleteCheck: (where: CheckWhereUniqueInput) => CheckPromise;
   deleteManyChecks: (where?: CheckWhereInput) => BatchPayloadPromise;
   createCheckpoint: (data: CheckpointCreateInput) => CheckpointPromise;
   updateCheckpoint: (
@@ -346,34 +358,34 @@ export interface ClientConstructor<T> {
  */
 
 export type GroupOrderByInput =
-  | "code_ASC"
-  | "code_DESC"
   | "id_ASC"
   | "id_DESC"
   | "createdAt_ASC"
   | "createdAt_DESC"
   | "updatedAt_ASC"
-  | "updatedAt_DESC";
+  | "updatedAt_DESC"
+  | "code_ASC"
+  | "code_DESC";
 
 export type BraceletOrderByInput =
   | "id_ASC"
   | "id_DESC"
-  | "code_ASC"
-  | "code_DESC"
   | "createdAt_ASC"
   | "createdAt_DESC"
   | "updatedAt_ASC"
-  | "updatedAt_DESC";
+  | "updatedAt_DESC"
+  | "code_ASC"
+  | "code_DESC";
 
 export type CheckOrderByInput =
-  | "timestamp_ASC"
-  | "timestamp_DESC"
   | "id_ASC"
   | "id_DESC"
   | "createdAt_ASC"
   | "createdAt_DESC"
   | "updatedAt_ASC"
-  | "updatedAt_DESC";
+  | "updatedAt_DESC"
+  | "timestamp_ASC"
+  | "timestamp_DESC";
 
 export type ProductOrderByInput =
   | "id_ASC"
@@ -382,8 +394,8 @@ export type ProductOrderByInput =
   | "name_DESC"
   | "description_ASC"
   | "description_DESC"
-  | "checkLimit_ASC"
-  | "checkLimit_DESC"
+  | "checklimit_ASC"
+  | "checklimit_DESC"
   | "createdAt_ASC"
   | "createdAt_DESC"
   | "updatedAt_ASC"
@@ -400,39 +412,172 @@ export type ActivationOrderByInput =
 export type CheckpointOrderByInput =
   | "id_ASC"
   | "id_DESC"
-  | "name_ASC"
-  | "name_DESC"
   | "createdAt_ASC"
   | "createdAt_DESC"
   | "updatedAt_ASC"
-  | "updatedAt_DESC";
+  | "updatedAt_DESC"
+  | "name_ASC"
+  | "name_DESC";
 
 export type UserOrderByInput =
   | "id_ASC"
   | "id_DESC"
-  | "username_ASC"
-  | "username_DESC"
-  | "password_ASC"
-  | "password_DESC"
   | "createdAt_ASC"
   | "createdAt_DESC"
   | "updatedAt_ASC"
-  | "updatedAt_DESC";
+  | "updatedAt_DESC"
+  | "username_ASC"
+  | "username_DESC"
+  | "password_ASC"
+  | "password_DESC";
 
 export type MutationType = "CREATED" | "UPDATED" | "DELETED";
 
-export interface UserUpsertNestedInput {
-  update: UserUpdateDataInput;
-  create: UserCreateInput;
+export interface CheckpointUpdateOneRequiredWithoutChecksInput {
+  create?: CheckpointCreateWithoutChecksInput;
+  update?: CheckpointUpdateWithoutChecksDataInput;
+  upsert?: CheckpointUpsertWithoutChecksInput;
+  connect?: CheckpointWhereUniqueInput;
 }
 
 export type ActivationWhereUniqueInput = AtLeastOne<{
   id: ID_Input;
 }>;
 
-export interface BraceletUpdateWithWhereUniqueWithoutGroupInput {
-  where: BraceletWhereUniqueInput;
-  data: BraceletUpdateWithoutGroupDataInput;
+export interface ActivationUpdateManyWithoutProductsInput {
+  create?:
+    | ActivationCreateWithoutProductsInput[]
+    | ActivationCreateWithoutProductsInput;
+  delete?: ActivationWhereUniqueInput[] | ActivationWhereUniqueInput;
+  connect?: ActivationWhereUniqueInput[] | ActivationWhereUniqueInput;
+  disconnect?: ActivationWhereUniqueInput[] | ActivationWhereUniqueInput;
+  update?:
+    | ActivationUpdateWithWhereUniqueWithoutProductsInput[]
+    | ActivationUpdateWithWhereUniqueWithoutProductsInput;
+  upsert?:
+    | ActivationUpsertWithWhereUniqueWithoutProductsInput[]
+    | ActivationUpsertWithWhereUniqueWithoutProductsInput;
+  deleteMany?: ActivationScalarWhereInput[] | ActivationScalarWhereInput;
+}
+
+export interface CheckpointWhereInput {
+  id?: ID_Input;
+  id_not?: ID_Input;
+  id_in?: ID_Input[] | ID_Input;
+  id_not_in?: ID_Input[] | ID_Input;
+  id_lt?: ID_Input;
+  id_lte?: ID_Input;
+  id_gt?: ID_Input;
+  id_gte?: ID_Input;
+  id_contains?: ID_Input;
+  id_not_contains?: ID_Input;
+  id_starts_with?: ID_Input;
+  id_not_starts_with?: ID_Input;
+  id_ends_with?: ID_Input;
+  id_not_ends_with?: ID_Input;
+  createdAt?: DateTimeInput;
+  createdAt_not?: DateTimeInput;
+  createdAt_in?: DateTimeInput[] | DateTimeInput;
+  createdAt_not_in?: DateTimeInput[] | DateTimeInput;
+  createdAt_lt?: DateTimeInput;
+  createdAt_lte?: DateTimeInput;
+  createdAt_gt?: DateTimeInput;
+  createdAt_gte?: DateTimeInput;
+  updatedAt?: DateTimeInput;
+  updatedAt_not?: DateTimeInput;
+  updatedAt_in?: DateTimeInput[] | DateTimeInput;
+  updatedAt_not_in?: DateTimeInput[] | DateTimeInput;
+  updatedAt_lt?: DateTimeInput;
+  updatedAt_lte?: DateTimeInput;
+  updatedAt_gt?: DateTimeInput;
+  updatedAt_gte?: DateTimeInput;
+  name?: String;
+  name_not?: String;
+  name_in?: String[] | String;
+  name_not_in?: String[] | String;
+  name_lt?: String;
+  name_lte?: String;
+  name_gt?: String;
+  name_gte?: String;
+  name_contains?: String;
+  name_not_contains?: String;
+  name_starts_with?: String;
+  name_not_starts_with?: String;
+  name_ends_with?: String;
+  name_not_ends_with?: String;
+  products_every?: ProductWhereInput;
+  products_some?: ProductWhereInput;
+  products_none?: ProductWhereInput;
+  checks_every?: CheckWhereInput;
+  checks_some?: CheckWhereInput;
+  checks_none?: CheckWhereInput;
+  AND?: CheckpointWhereInput[] | CheckpointWhereInput;
+  OR?: CheckpointWhereInput[] | CheckpointWhereInput;
+  NOT?: CheckpointWhereInput[] | CheckpointWhereInput;
+}
+
+export interface ActivationUpdateWithWhereUniqueWithoutProductsInput {
+  where: ActivationWhereUniqueInput;
+  data: ActivationUpdateWithoutProductsDataInput;
+}
+
+export interface BraceletWhereInput {
+  id?: ID_Input;
+  id_not?: ID_Input;
+  id_in?: ID_Input[] | ID_Input;
+  id_not_in?: ID_Input[] | ID_Input;
+  id_lt?: ID_Input;
+  id_lte?: ID_Input;
+  id_gt?: ID_Input;
+  id_gte?: ID_Input;
+  id_contains?: ID_Input;
+  id_not_contains?: ID_Input;
+  id_starts_with?: ID_Input;
+  id_not_starts_with?: ID_Input;
+  id_ends_with?: ID_Input;
+  id_not_ends_with?: ID_Input;
+  createdAt?: DateTimeInput;
+  createdAt_not?: DateTimeInput;
+  createdAt_in?: DateTimeInput[] | DateTimeInput;
+  createdAt_not_in?: DateTimeInput[] | DateTimeInput;
+  createdAt_lt?: DateTimeInput;
+  createdAt_lte?: DateTimeInput;
+  createdAt_gt?: DateTimeInput;
+  createdAt_gte?: DateTimeInput;
+  updatedAt?: DateTimeInput;
+  updatedAt_not?: DateTimeInput;
+  updatedAt_in?: DateTimeInput[] | DateTimeInput;
+  updatedAt_not_in?: DateTimeInput[] | DateTimeInput;
+  updatedAt_lt?: DateTimeInput;
+  updatedAt_lte?: DateTimeInput;
+  updatedAt_gt?: DateTimeInput;
+  updatedAt_gte?: DateTimeInput;
+  code?: String;
+  code_not?: String;
+  code_in?: String[] | String;
+  code_not_in?: String[] | String;
+  code_lt?: String;
+  code_lte?: String;
+  code_gt?: String;
+  code_gte?: String;
+  code_contains?: String;
+  code_not_contains?: String;
+  code_starts_with?: String;
+  code_not_starts_with?: String;
+  code_ends_with?: String;
+  code_not_ends_with?: String;
+  group?: GroupWhereInput;
+  checks_every?: CheckWhereInput;
+  checks_some?: CheckWhereInput;
+  checks_none?: CheckWhereInput;
+  AND?: BraceletWhereInput[] | BraceletWhereInput;
+  OR?: BraceletWhereInput[] | BraceletWhereInput;
+  NOT?: BraceletWhereInput[] | BraceletWhereInput;
+}
+
+export interface ActivationUpdateWithoutProductsDataInput {
+  owner?: UserUpdateOneRequiredWithoutActivatedGroupsInput;
+  groups?: GroupUpdateManyWithoutActivationInput;
 }
 
 export interface ProductWhereInput {
@@ -482,22 +627,84 @@ export interface ProductWhereInput {
   activations_some?: ActivationWhereInput;
   activations_none?: ActivationWhereInput;
   checkpoint?: CheckpointWhereInput;
-  checkLimit?: Int;
-  checkLimit_not?: Int;
-  checkLimit_in?: Int[] | Int;
-  checkLimit_not_in?: Int[] | Int;
-  checkLimit_lt?: Int;
-  checkLimit_lte?: Int;
-  checkLimit_gt?: Int;
-  checkLimit_gte?: Int;
+  checklimit?: Int;
+  checklimit_not?: Int;
+  checklimit_in?: Int[] | Int;
+  checklimit_not_in?: Int[] | Int;
+  checklimit_lt?: Int;
+  checklimit_lte?: Int;
+  checklimit_gt?: Int;
+  checklimit_gte?: Int;
   AND?: ProductWhereInput[] | ProductWhereInput;
   OR?: ProductWhereInput[] | ProductWhereInput;
   NOT?: ProductWhereInput[] | ProductWhereInput;
 }
 
-export interface BraceletUpdateWithoutGroupDataInput {
-  code?: String;
-  checks?: CheckUpdateManyWithoutBraceletInput;
+export interface GroupUpdateManyWithoutActivationInput {
+  create?:
+    | GroupCreateWithoutActivationInput[]
+    | GroupCreateWithoutActivationInput;
+  delete?: GroupWhereUniqueInput[] | GroupWhereUniqueInput;
+  connect?: GroupWhereUniqueInput[] | GroupWhereUniqueInput;
+  disconnect?: GroupWhereUniqueInput[] | GroupWhereUniqueInput;
+  update?:
+    | GroupUpdateWithWhereUniqueWithoutActivationInput[]
+    | GroupUpdateWithWhereUniqueWithoutActivationInput;
+  upsert?:
+    | GroupUpsertWithWhereUniqueWithoutActivationInput[]
+    | GroupUpsertWithWhereUniqueWithoutActivationInput;
+  deleteMany?: GroupScalarWhereInput[] | GroupScalarWhereInput;
+  updateMany?:
+    | GroupUpdateManyWithWhereNestedInput[]
+    | GroupUpdateManyWithWhereNestedInput;
+}
+
+export interface ActivationWhereInput {
+  id?: ID_Input;
+  id_not?: ID_Input;
+  id_in?: ID_Input[] | ID_Input;
+  id_not_in?: ID_Input[] | ID_Input;
+  id_lt?: ID_Input;
+  id_lte?: ID_Input;
+  id_gt?: ID_Input;
+  id_gte?: ID_Input;
+  id_contains?: ID_Input;
+  id_not_contains?: ID_Input;
+  id_starts_with?: ID_Input;
+  id_not_starts_with?: ID_Input;
+  id_ends_with?: ID_Input;
+  id_not_ends_with?: ID_Input;
+  createdAt?: DateTimeInput;
+  createdAt_not?: DateTimeInput;
+  createdAt_in?: DateTimeInput[] | DateTimeInput;
+  createdAt_not_in?: DateTimeInput[] | DateTimeInput;
+  createdAt_lt?: DateTimeInput;
+  createdAt_lte?: DateTimeInput;
+  createdAt_gt?: DateTimeInput;
+  createdAt_gte?: DateTimeInput;
+  updatedAt?: DateTimeInput;
+  updatedAt_not?: DateTimeInput;
+  updatedAt_in?: DateTimeInput[] | DateTimeInput;
+  updatedAt_not_in?: DateTimeInput[] | DateTimeInput;
+  updatedAt_lt?: DateTimeInput;
+  updatedAt_lte?: DateTimeInput;
+  updatedAt_gt?: DateTimeInput;
+  updatedAt_gte?: DateTimeInput;
+  owner?: UserWhereInput;
+  groups_every?: GroupWhereInput;
+  groups_some?: GroupWhereInput;
+  groups_none?: GroupWhereInput;
+  products_every?: ProductWhereInput;
+  products_some?: ProductWhereInput;
+  products_none?: ProductWhereInput;
+  AND?: ActivationWhereInput[] | ActivationWhereInput;
+  OR?: ActivationWhereInput[] | ActivationWhereInput;
+  NOT?: ActivationWhereInput[] | ActivationWhereInput;
+}
+
+export interface GroupUpdateWithWhereUniqueWithoutActivationInput {
+  where: GroupWhereUniqueInput;
+  data: GroupUpdateWithoutActivationDataInput;
 }
 
 export interface UserWhereInput {
@@ -515,6 +722,22 @@ export interface UserWhereInput {
   id_not_starts_with?: ID_Input;
   id_ends_with?: ID_Input;
   id_not_ends_with?: ID_Input;
+  createdAt?: DateTimeInput;
+  createdAt_not?: DateTimeInput;
+  createdAt_in?: DateTimeInput[] | DateTimeInput;
+  createdAt_not_in?: DateTimeInput[] | DateTimeInput;
+  createdAt_lt?: DateTimeInput;
+  createdAt_lte?: DateTimeInput;
+  createdAt_gt?: DateTimeInput;
+  createdAt_gte?: DateTimeInput;
+  updatedAt?: DateTimeInput;
+  updatedAt_not?: DateTimeInput;
+  updatedAt_in?: DateTimeInput[] | DateTimeInput;
+  updatedAt_not_in?: DateTimeInput[] | DateTimeInput;
+  updatedAt_lt?: DateTimeInput;
+  updatedAt_lte?: DateTimeInput;
+  updatedAt_gt?: DateTimeInput;
+  updatedAt_gte?: DateTimeInput;
   username?: String;
   username_not?: String;
   username_in?: String[] | String;
@@ -543,20 +766,289 @@ export interface UserWhereInput {
   password_not_starts_with?: String;
   password_ends_with?: String;
   password_not_ends_with?: String;
+  createdGroups_every?: GroupWhereInput;
+  createdGroups_some?: GroupWhereInput;
+  createdGroups_none?: GroupWhereInput;
+  activatedGroups_every?: ActivationWhereInput;
+  activatedGroups_some?: ActivationWhereInput;
+  activatedGroups_none?: ActivationWhereInput;
   AND?: UserWhereInput[] | UserWhereInput;
   OR?: UserWhereInput[] | UserWhereInput;
   NOT?: UserWhereInput[] | UserWhereInput;
 }
 
+export interface ActivationCreateOneWithoutGroupsInput {
+  create?: ActivationCreateWithoutGroupsInput;
+  connect?: ActivationWhereUniqueInput;
+}
+
+export interface CheckpointUpsertWithoutChecksInput {
+  update: CheckpointUpdateWithoutChecksDataInput;
+  create: CheckpointCreateWithoutChecksInput;
+}
+
+export interface ActivationCreateWithoutGroupsInput {
+  owner: UserCreateOneWithoutActivatedGroupsInput;
+  products?: ProductCreateManyWithoutActivationsInput;
+}
+
+export interface GroupUpdateWithoutActivationDataInput {
+  owner?: UserUpdateOneRequiredWithoutCreatedGroupsInput;
+  code?: String;
+  bracelets?: BraceletUpdateManyWithoutGroupInput;
+}
+
+export interface ActivationUpdateInput {
+  owner?: UserUpdateOneRequiredWithoutActivatedGroupsInput;
+  groups?: GroupUpdateManyWithoutActivationInput;
+  products?: ProductUpdateManyWithoutActivationsInput;
+}
+
+export interface ProductSubscriptionWhereInput {
+  mutation_in?: MutationType[] | MutationType;
+  updatedFields_contains?: String;
+  updatedFields_contains_every?: String[] | String;
+  updatedFields_contains_some?: String[] | String;
+  node?: ProductWhereInput;
+  AND?: ProductSubscriptionWhereInput[] | ProductSubscriptionWhereInput;
+  OR?: ProductSubscriptionWhereInput[] | ProductSubscriptionWhereInput;
+  NOT?: ProductSubscriptionWhereInput[] | ProductSubscriptionWhereInput;
+}
+
+export interface UserUpdateOneRequiredWithoutActivatedGroupsInput {
+  create?: UserCreateWithoutActivatedGroupsInput;
+  update?: UserUpdateWithoutActivatedGroupsDataInput;
+  upsert?: UserUpsertWithoutActivatedGroupsInput;
+  connect?: UserWhereUniqueInput;
+}
+
+export interface CheckpointSubscriptionWhereInput {
+  mutation_in?: MutationType[] | MutationType;
+  updatedFields_contains?: String;
+  updatedFields_contains_every?: String[] | String;
+  updatedFields_contains_some?: String[] | String;
+  node?: CheckpointWhereInput;
+  AND?: CheckpointSubscriptionWhereInput[] | CheckpointSubscriptionWhereInput;
+  OR?: CheckpointSubscriptionWhereInput[] | CheckpointSubscriptionWhereInput;
+  NOT?: CheckpointSubscriptionWhereInput[] | CheckpointSubscriptionWhereInput;
+}
+
+export interface UserUpdateWithoutActivatedGroupsDataInput {
+  username?: String;
+  password?: String;
+  createdGroups?: GroupUpdateManyWithoutOwnerInput;
+}
+
+export interface BraceletSubscriptionWhereInput {
+  mutation_in?: MutationType[] | MutationType;
+  updatedFields_contains?: String;
+  updatedFields_contains_every?: String[] | String;
+  updatedFields_contains_some?: String[] | String;
+  node?: BraceletWhereInput;
+  AND?: BraceletSubscriptionWhereInput[] | BraceletSubscriptionWhereInput;
+  OR?: BraceletSubscriptionWhereInput[] | BraceletSubscriptionWhereInput;
+  NOT?: BraceletSubscriptionWhereInput[] | BraceletSubscriptionWhereInput;
+}
+
+export interface GroupUpdateManyWithoutOwnerInput {
+  create?: GroupCreateWithoutOwnerInput[] | GroupCreateWithoutOwnerInput;
+  delete?: GroupWhereUniqueInput[] | GroupWhereUniqueInput;
+  connect?: GroupWhereUniqueInput[] | GroupWhereUniqueInput;
+  disconnect?: GroupWhereUniqueInput[] | GroupWhereUniqueInput;
+  update?:
+    | GroupUpdateWithWhereUniqueWithoutOwnerInput[]
+    | GroupUpdateWithWhereUniqueWithoutOwnerInput;
+  upsert?:
+    | GroupUpsertWithWhereUniqueWithoutOwnerInput[]
+    | GroupUpsertWithWhereUniqueWithoutOwnerInput;
+  deleteMany?: GroupScalarWhereInput[] | GroupScalarWhereInput;
+  updateMany?:
+    | GroupUpdateManyWithWhereNestedInput[]
+    | GroupUpdateManyWithWhereNestedInput;
+}
+
+export type BraceletWhereUniqueInput = AtLeastOne<{
+  id: ID_Input;
+  code?: String;
+}>;
+
+export interface GroupUpdateWithWhereUniqueWithoutOwnerInput {
+  where: GroupWhereUniqueInput;
+  data: GroupUpdateWithoutOwnerDataInput;
+}
+
+export interface UserUpdateInput {
+  username?: String;
+  password?: String;
+  createdGroups?: GroupUpdateManyWithoutOwnerInput;
+  activatedGroups?: ActivationUpdateManyWithoutOwnerInput;
+}
+
+export interface GroupUpdateWithoutOwnerDataInput {
+  code?: String;
+  bracelets?: BraceletUpdateManyWithoutGroupInput;
+  activation?: ActivationUpdateOneWithoutGroupsInput;
+}
+
+export type CheckWhereUniqueInput = AtLeastOne<{
+  id: ID_Input;
+}>;
+
+export interface BraceletUpdateManyWithoutGroupInput {
+  create?: BraceletCreateWithoutGroupInput[] | BraceletCreateWithoutGroupInput;
+  delete?: BraceletWhereUniqueInput[] | BraceletWhereUniqueInput;
+  connect?: BraceletWhereUniqueInput[] | BraceletWhereUniqueInput;
+  disconnect?: BraceletWhereUniqueInput[] | BraceletWhereUniqueInput;
+  update?:
+    | BraceletUpdateWithWhereUniqueWithoutGroupInput[]
+    | BraceletUpdateWithWhereUniqueWithoutGroupInput;
+  upsert?:
+    | BraceletUpsertWithWhereUniqueWithoutGroupInput[]
+    | BraceletUpsertWithWhereUniqueWithoutGroupInput;
+  deleteMany?: BraceletScalarWhereInput[] | BraceletScalarWhereInput;
+  updateMany?:
+    | BraceletUpdateManyWithWhereNestedInput[]
+    | BraceletUpdateManyWithWhereNestedInput;
+}
+
+export interface ProductUpdateInput {
+  name?: String;
+  description?: String;
+  activations?: ActivationUpdateManyWithoutProductsInput;
+  checkpoint?: CheckpointUpdateOneRequiredWithoutProductsInput;
+  checklimit?: Int;
+}
+
+export interface BraceletUpdateWithWhereUniqueWithoutGroupInput {
+  where: BraceletWhereUniqueInput;
+  data: BraceletUpdateWithoutGroupDataInput;
+}
+
+export type CheckpointWhereUniqueInput = AtLeastOne<{
+  id: ID_Input;
+  name?: String;
+}>;
+
+export interface BraceletUpdateWithoutGroupDataInput {
+  code?: String;
+  checks?: CheckUpdateManyWithoutBraceletInput;
+}
+
+export interface GroupUpdateInput {
+  owner?: UserUpdateOneRequiredWithoutCreatedGroupsInput;
+  code?: String;
+  bracelets?: BraceletUpdateManyWithoutGroupInput;
+  activation?: ActivationUpdateOneWithoutGroupsInput;
+}
+
 export interface CheckUpdateManyWithoutBraceletInput {
   create?: CheckCreateWithoutBraceletInput[] | CheckCreateWithoutBraceletInput;
+  delete?: CheckWhereUniqueInput[] | CheckWhereUniqueInput;
+  connect?: CheckWhereUniqueInput[] | CheckWhereUniqueInput;
+  disconnect?: CheckWhereUniqueInput[] | CheckWhereUniqueInput;
+  update?:
+    | CheckUpdateWithWhereUniqueWithoutBraceletInput[]
+    | CheckUpdateWithWhereUniqueWithoutBraceletInput;
+  upsert?:
+    | CheckUpsertWithWhereUniqueWithoutBraceletInput[]
+    | CheckUpsertWithWhereUniqueWithoutBraceletInput;
   deleteMany?: CheckScalarWhereInput[] | CheckScalarWhereInput;
   updateMany?:
     | CheckUpdateManyWithWhereNestedInput[]
     | CheckUpdateManyWithWhereNestedInput;
 }
 
-export interface CheckpointWhereInput {
+export interface CheckpointUpdateManyMutationInput {
+  name?: String;
+}
+
+export interface CheckUpdateWithWhereUniqueWithoutBraceletInput {
+  where: CheckWhereUniqueInput;
+  data: CheckUpdateWithoutBraceletDataInput;
+}
+
+export interface CheckpointUpdateInput {
+  name?: String;
+  products?: ProductUpdateManyWithoutCheckpointInput;
+  checks?: CheckUpdateManyWithoutCheckpointInput;
+}
+
+export interface CheckUpdateWithoutBraceletDataInput {
+  timestamp?: DateTimeInput;
+  checkpoint?: CheckpointUpdateOneRequiredWithoutChecksInput;
+}
+
+export interface CheckUpdateManyMutationInput {
+  timestamp?: DateTimeInput;
+}
+
+export interface BraceletUpdateManyDataInput {
+  code?: String;
+}
+
+export interface CheckUpdateInput {
+  timestamp?: DateTimeInput;
+  bracelet?: BraceletUpdateOneRequiredWithoutChecksInput;
+  checkpoint?: CheckpointUpdateOneRequiredWithoutChecksInput;
+}
+
+export interface CheckpointUpdateWithoutChecksDataInput {
+  name?: String;
+  products?: ProductUpdateManyWithoutCheckpointInput;
+}
+
+export interface BraceletUpdateManyMutationInput {
+  code?: String;
+}
+
+export interface ProductUpdateManyWithoutCheckpointInput {
+  create?:
+    | ProductCreateWithoutCheckpointInput[]
+    | ProductCreateWithoutCheckpointInput;
+  delete?: ProductWhereUniqueInput[] | ProductWhereUniqueInput;
+  connect?: ProductWhereUniqueInput[] | ProductWhereUniqueInput;
+  disconnect?: ProductWhereUniqueInput[] | ProductWhereUniqueInput;
+  update?:
+    | ProductUpdateWithWhereUniqueWithoutCheckpointInput[]
+    | ProductUpdateWithWhereUniqueWithoutCheckpointInput;
+  upsert?:
+    | ProductUpsertWithWhereUniqueWithoutCheckpointInput[]
+    | ProductUpsertWithWhereUniqueWithoutCheckpointInput;
+  deleteMany?: ProductScalarWhereInput[] | ProductScalarWhereInput;
+  updateMany?:
+    | ProductUpdateManyWithWhereNestedInput[]
+    | ProductUpdateManyWithWhereNestedInput;
+}
+
+export interface BraceletUpdateInput {
+  code?: String;
+  group?: GroupUpdateOneRequiredWithoutBraceletsInput;
+  checks?: CheckUpdateManyWithoutBraceletInput;
+}
+
+export interface ProductUpdateWithWhereUniqueWithoutCheckpointInput {
+  where: ProductWhereUniqueInput;
+  data: ProductUpdateWithoutCheckpointDataInput;
+}
+
+export interface UserUpsertWithoutActivatedGroupsInput {
+  update: UserUpdateWithoutActivatedGroupsDataInput;
+  create: UserCreateWithoutActivatedGroupsInput;
+}
+
+export interface ProductUpdateWithoutCheckpointDataInput {
+  name?: String;
+  description?: String;
+  activations?: ActivationUpdateManyWithoutProductsInput;
+  checklimit?: Int;
+}
+
+export interface UserCreateOneWithoutActivatedGroupsInput {
+  create?: UserCreateWithoutActivatedGroupsInput;
+  connect?: UserWhereUniqueInput;
+}
+
+export interface CheckWhereInput {
   id?: ID_Input;
   id_not?: ID_Input;
   id_in?: ID_Input[] | ID_Input;
@@ -571,49 +1063,22 @@ export interface CheckpointWhereInput {
   id_not_starts_with?: ID_Input;
   id_ends_with?: ID_Input;
   id_not_ends_with?: ID_Input;
-  name?: String;
-  name_not?: String;
-  name_in?: String[] | String;
-  name_not_in?: String[] | String;
-  name_lt?: String;
-  name_lte?: String;
-  name_gt?: String;
-  name_gte?: String;
-  name_contains?: String;
-  name_not_contains?: String;
-  name_starts_with?: String;
-  name_not_starts_with?: String;
-  name_ends_with?: String;
-  name_not_ends_with?: String;
-  products_every?: ProductWhereInput;
-  products_some?: ProductWhereInput;
-  products_none?: ProductWhereInput;
-  checks_every?: CheckWhereInput;
-  checks_some?: CheckWhereInput;
-  checks_none?: CheckWhereInput;
-  AND?: CheckpointWhereInput[] | CheckpointWhereInput;
-  OR?: CheckpointWhereInput[] | CheckpointWhereInput;
-  NOT?: CheckpointWhereInput[] | CheckpointWhereInput;
-}
-
-export interface ActivationCreateWithoutProductsInput {
-  user: UserCreateOneInput;
-  groups?: GroupCreateManyWithoutActivationInput;
-}
-
-export interface GroupUpdateWithoutBraceletsDataInput {
-  code?: String;
-  activation?: ActivationUpdateOneWithoutGroupsInput;
-}
-
-export interface ProductCreateManyWithoutActivationsInput {
-  create?:
-    | ProductCreateWithoutActivationsInput[]
-    | ProductCreateWithoutActivationsInput;
-  connect?: ProductWhereUniqueInput[] | ProductWhereUniqueInput;
-}
-
-export interface CheckScalarWhereInput {
+  createdAt?: DateTimeInput;
+  createdAt_not?: DateTimeInput;
+  createdAt_in?: DateTimeInput[] | DateTimeInput;
+  createdAt_not_in?: DateTimeInput[] | DateTimeInput;
+  createdAt_lt?: DateTimeInput;
+  createdAt_lte?: DateTimeInput;
+  createdAt_gt?: DateTimeInput;
+  createdAt_gte?: DateTimeInput;
+  updatedAt?: DateTimeInput;
+  updatedAt_not?: DateTimeInput;
+  updatedAt_in?: DateTimeInput[] | DateTimeInput;
+  updatedAt_not_in?: DateTimeInput[] | DateTimeInput;
+  updatedAt_lt?: DateTimeInput;
+  updatedAt_lte?: DateTimeInput;
+  updatedAt_gt?: DateTimeInput;
+  updatedAt_gte?: DateTimeInput;
   timestamp?: DateTimeInput;
   timestamp_not?: DateTimeInput;
   timestamp_in?: DateTimeInput[] | DateTimeInput;
@@ -622,35 +1087,29 @@ export interface CheckScalarWhereInput {
   timestamp_lte?: DateTimeInput;
   timestamp_gt?: DateTimeInput;
   timestamp_gte?: DateTimeInput;
-  AND?: CheckScalarWhereInput[] | CheckScalarWhereInput;
-  OR?: CheckScalarWhereInput[] | CheckScalarWhereInput;
-  NOT?: CheckScalarWhereInput[] | CheckScalarWhereInput;
+  bracelet?: BraceletWhereInput;
+  checkpoint?: CheckpointWhereInput;
+  AND?: CheckWhereInput[] | CheckWhereInput;
+  OR?: CheckWhereInput[] | CheckWhereInput;
+  NOT?: CheckWhereInput[] | CheckWhereInput;
 }
 
-export interface ProductCreateWithoutActivationsInput {
-  name: String;
-  description: String;
-  checkpoint: CheckpointCreateOneWithoutProductsInput;
-  checkLimit?: Int;
+export interface GroupCreateManyWithoutOwnerInput {
+  create?: GroupCreateWithoutOwnerInput[] | GroupCreateWithoutOwnerInput;
+  connect?: GroupWhereUniqueInput[] | GroupWhereUniqueInput;
 }
 
-export interface UserSubscriptionWhereInput {
-  mutation_in?: MutationType[] | MutationType;
-  updatedFields_contains?: String;
-  updatedFields_contains_every?: String[] | String;
-  updatedFields_contains_some?: String[] | String;
-  node?: UserWhereInput;
-  AND?: UserSubscriptionWhereInput[] | UserSubscriptionWhereInput;
-  OR?: UserSubscriptionWhereInput[] | UserSubscriptionWhereInput;
-  NOT?: UserSubscriptionWhereInput[] | UserSubscriptionWhereInput;
+export interface BraceletUpdateManyWithWhereNestedInput {
+  where: BraceletScalarWhereInput;
+  data: BraceletUpdateManyDataInput;
 }
 
-export interface CheckpointCreateOneWithoutProductsInput {
-  create?: CheckpointCreateWithoutProductsInput;
-  connect?: CheckpointWhereUniqueInput;
+export interface BraceletCreateManyWithoutGroupInput {
+  create?: BraceletCreateWithoutGroupInput[] | BraceletCreateWithoutGroupInput;
+  connect?: BraceletWhereUniqueInput[] | BraceletWhereUniqueInput;
 }
 
-export interface BraceletWhereInput {
+export interface BraceletScalarWhereInput {
   id?: ID_Input;
   id_not?: ID_Input;
   id_in?: ID_Input[] | ID_Input;
@@ -665,6 +1124,22 @@ export interface BraceletWhereInput {
   id_not_starts_with?: ID_Input;
   id_ends_with?: ID_Input;
   id_not_ends_with?: ID_Input;
+  createdAt?: DateTimeInput;
+  createdAt_not?: DateTimeInput;
+  createdAt_in?: DateTimeInput[] | DateTimeInput;
+  createdAt_not_in?: DateTimeInput[] | DateTimeInput;
+  createdAt_lt?: DateTimeInput;
+  createdAt_lte?: DateTimeInput;
+  createdAt_gt?: DateTimeInput;
+  createdAt_gte?: DateTimeInput;
+  updatedAt?: DateTimeInput;
+  updatedAt_not?: DateTimeInput;
+  updatedAt_in?: DateTimeInput[] | DateTimeInput;
+  updatedAt_not_in?: DateTimeInput[] | DateTimeInput;
+  updatedAt_lt?: DateTimeInput;
+  updatedAt_lte?: DateTimeInput;
+  updatedAt_gt?: DateTimeInput;
+  updatedAt_gte?: DateTimeInput;
   code?: String;
   code_not?: String;
   code_in?: String[] | String;
@@ -679,21 +1154,72 @@ export interface BraceletWhereInput {
   code_not_starts_with?: String;
   code_ends_with?: String;
   code_not_ends_with?: String;
-  group?: GroupWhereInput;
-  checks_every?: CheckWhereInput;
-  checks_some?: CheckWhereInput;
-  checks_none?: CheckWhereInput;
-  AND?: BraceletWhereInput[] | BraceletWhereInput;
-  OR?: BraceletWhereInput[] | BraceletWhereInput;
-  NOT?: BraceletWhereInput[] | BraceletWhereInput;
+  AND?: BraceletScalarWhereInput[] | BraceletScalarWhereInput;
+  OR?: BraceletScalarWhereInput[] | BraceletScalarWhereInput;
+  NOT?: BraceletScalarWhereInput[] | BraceletScalarWhereInput;
 }
 
-export interface CheckpointCreateWithoutProductsInput {
-  name: String;
-  checks?: CheckCreateManyWithoutCheckpointInput;
+export interface CheckCreateManyWithoutBraceletInput {
+  create?: CheckCreateWithoutBraceletInput[] | CheckCreateWithoutBraceletInput;
+  connect?: CheckWhereUniqueInput[] | CheckWhereUniqueInput;
+}
+
+export interface BraceletUpsertWithWhereUniqueWithoutGroupInput {
+  where: BraceletWhereUniqueInput;
+  update: BraceletUpdateWithoutGroupDataInput;
+  create: BraceletCreateWithoutGroupInput;
+}
+
+export interface CheckpointCreateOneWithoutChecksInput {
+  create?: CheckpointCreateWithoutChecksInput;
+  connect?: CheckpointWhereUniqueInput;
+}
+
+export interface CheckUpsertWithWhereUniqueWithoutBraceletInput {
+  where: CheckWhereUniqueInput;
+  update: CheckUpdateWithoutBraceletDataInput;
+  create: CheckCreateWithoutBraceletInput;
+}
+
+export interface ProductCreateManyWithoutCheckpointInput {
+  create?:
+    | ProductCreateWithoutCheckpointInput[]
+    | ProductCreateWithoutCheckpointInput;
+  connect?: ProductWhereUniqueInput[] | ProductWhereUniqueInput;
 }
 
 export interface GroupWhereInput {
+  id?: ID_Input;
+  id_not?: ID_Input;
+  id_in?: ID_Input[] | ID_Input;
+  id_not_in?: ID_Input[] | ID_Input;
+  id_lt?: ID_Input;
+  id_lte?: ID_Input;
+  id_gt?: ID_Input;
+  id_gte?: ID_Input;
+  id_contains?: ID_Input;
+  id_not_contains?: ID_Input;
+  id_starts_with?: ID_Input;
+  id_not_starts_with?: ID_Input;
+  id_ends_with?: ID_Input;
+  id_not_ends_with?: ID_Input;
+  createdAt?: DateTimeInput;
+  createdAt_not?: DateTimeInput;
+  createdAt_in?: DateTimeInput[] | DateTimeInput;
+  createdAt_not_in?: DateTimeInput[] | DateTimeInput;
+  createdAt_lt?: DateTimeInput;
+  createdAt_lte?: DateTimeInput;
+  createdAt_gt?: DateTimeInput;
+  createdAt_gte?: DateTimeInput;
+  updatedAt?: DateTimeInput;
+  updatedAt_not?: DateTimeInput;
+  updatedAt_in?: DateTimeInput[] | DateTimeInput;
+  updatedAt_not_in?: DateTimeInput[] | DateTimeInput;
+  updatedAt_lt?: DateTimeInput;
+  updatedAt_lte?: DateTimeInput;
+  updatedAt_gt?: DateTimeInput;
+  updatedAt_gte?: DateTimeInput;
+  owner?: UserWhereInput;
   code?: String;
   code_not?: String;
   code_in?: String[] | String;
@@ -717,455 +1243,81 @@ export interface GroupWhereInput {
   NOT?: GroupWhereInput[] | GroupWhereInput;
 }
 
-export interface CheckCreateManyWithoutCheckpointInput {
-  create?:
-    | CheckCreateWithoutCheckpointInput[]
-    | CheckCreateWithoutCheckpointInput;
-}
-
-export interface CheckSubscriptionWhereInput {
-  mutation_in?: MutationType[] | MutationType;
-  updatedFields_contains?: String;
-  updatedFields_contains_every?: String[] | String;
-  updatedFields_contains_some?: String[] | String;
-  node?: CheckWhereInput;
-  AND?: CheckSubscriptionWhereInput[] | CheckSubscriptionWhereInput;
-  OR?: CheckSubscriptionWhereInput[] | CheckSubscriptionWhereInput;
-  NOT?: CheckSubscriptionWhereInput[] | CheckSubscriptionWhereInput;
-}
-
-export interface CheckCreateWithoutCheckpointInput {
-  timestamp: DateTimeInput;
-  bracelet: BraceletCreateOneWithoutChecksInput;
-}
-
-export interface ActivationSubscriptionWhereInput {
-  mutation_in?: MutationType[] | MutationType;
-  updatedFields_contains?: String;
-  updatedFields_contains_every?: String[] | String;
-  updatedFields_contains_some?: String[] | String;
-  node?: ActivationWhereInput;
-  AND?: ActivationSubscriptionWhereInput[] | ActivationSubscriptionWhereInput;
-  OR?: ActivationSubscriptionWhereInput[] | ActivationSubscriptionWhereInput;
-  NOT?: ActivationSubscriptionWhereInput[] | ActivationSubscriptionWhereInput;
-}
-
-export interface BraceletCreateOneWithoutChecksInput {
-  create?: BraceletCreateWithoutChecksInput;
-  connect?: BraceletWhereUniqueInput;
-}
-
-export type BraceletWhereUniqueInput = AtLeastOne<{
-  id: ID_Input;
-  code?: String;
-}>;
-
-export interface BraceletCreateWithoutChecksInput {
-  code: String;
-  group: GroupCreateOneWithoutBraceletsInput;
-}
-
-export interface ProductUpdateManyMutationInput {
-  name?: String;
-  description?: String;
-  checkLimit?: Int;
-}
-
-export interface GroupCreateOneWithoutBraceletsInput {
-  create?: GroupCreateWithoutBraceletsInput;
-  connect?: GroupWhereUniqueInput;
-}
-
-export interface ProductCreateInput {
-  name: String;
-  description: String;
-  activations?: ActivationCreateManyWithoutProductsInput;
-  checkpoint: CheckpointCreateOneWithoutProductsInput;
-  checkLimit?: Int;
-}
-
-export interface GroupCreateWithoutBraceletsInput {
-  code: String;
-  activation?: ActivationCreateOneWithoutGroupsInput;
-}
-
-export interface GroupUpdateInput {
-  code?: String;
-  bracelets?: BraceletUpdateManyWithoutGroupInput;
-  activation?: ActivationUpdateOneWithoutGroupsInput;
-}
-
-export interface ActivationCreateOneWithoutGroupsInput {
-  create?: ActivationCreateWithoutGroupsInput;
-  connect?: ActivationWhereUniqueInput;
-}
-
-export interface GroupCreateInput {
-  code: String;
-  bracelets?: BraceletCreateManyWithoutGroupInput;
-  activation?: ActivationCreateOneWithoutGroupsInput;
-}
-
-export interface ActivationCreateWithoutGroupsInput {
-  user: UserCreateOneInput;
-  products?: ProductCreateManyWithoutActivationsInput;
-}
-
-export interface ProductUpsertWithWhereUniqueWithoutCheckpointInput {
-  where: ProductWhereUniqueInput;
-  update: ProductUpdateWithoutCheckpointDataInput;
-  create: ProductCreateWithoutCheckpointInput;
-}
-
-export interface ActivationUpdateInput {
-  user?: UserUpdateOneRequiredInput;
-  groups?: GroupUpdateManyWithoutActivationInput;
-  products?: ProductUpdateManyWithoutActivationsInput;
-}
-
-export type GroupWhereUniqueInput = AtLeastOne<{
-  code: String;
-}>;
-
-export interface UserUpdateOneRequiredInput {
-  create?: UserCreateInput;
-  update?: UserUpdateDataInput;
-  upsert?: UserUpsertNestedInput;
-  connect?: UserWhereUniqueInput;
-}
-
-export interface ActivationUpdateWithoutProductsDataInput {
-  user?: UserUpdateOneRequiredInput;
-  groups?: GroupUpdateManyWithoutActivationInput;
-}
-
-export interface UserUpdateDataInput {
-  username?: String;
-  password?: String;
-}
-
-export type ProductWhereUniqueInput = AtLeastOne<{
-  id: ID_Input;
-  name?: String;
-}>;
-
-export interface CheckCreateInput {
-  timestamp: DateTimeInput;
-  bracelet: BraceletCreateOneWithoutChecksInput;
-  checkpoint: CheckpointCreateOneWithoutChecksInput;
-}
-
-export interface ProductUpdateWithoutCheckpointDataInput {
-  name?: String;
-  description?: String;
-  activations?: ActivationUpdateManyWithoutProductsInput;
-  checkLimit?: Int;
-}
-
-export interface GroupUpdateManyWithoutActivationInput {
-  create?:
-    | GroupCreateWithoutActivationInput[]
-    | GroupCreateWithoutActivationInput;
-  delete?: GroupWhereUniqueInput[] | GroupWhereUniqueInput;
-  connect?: GroupWhereUniqueInput[] | GroupWhereUniqueInput;
-  disconnect?: GroupWhereUniqueInput[] | GroupWhereUniqueInput;
-  update?:
-    | GroupUpdateWithWhereUniqueWithoutActivationInput[]
-    | GroupUpdateWithWhereUniqueWithoutActivationInput;
-  upsert?:
-    | GroupUpsertWithWhereUniqueWithoutActivationInput[]
-    | GroupUpsertWithWhereUniqueWithoutActivationInput;
-  deleteMany?: GroupScalarWhereInput[] | GroupScalarWhereInput;
-  updateMany?:
-    | GroupUpdateManyWithWhereNestedInput[]
-    | GroupUpdateManyWithWhereNestedInput;
-}
-
-export type UserWhereUniqueInput = AtLeastOne<{
-  id: ID_Input;
-  username?: String;
-}>;
-
-export interface GroupUpdateWithWhereUniqueWithoutActivationInput {
-  where: GroupWhereUniqueInput;
-  data: GroupUpdateWithoutActivationDataInput;
-}
-
-export interface CheckpointUpdateInput {
-  name?: String;
-  products?: ProductUpdateManyWithoutCheckpointInput;
-  checks?: CheckUpdateManyWithoutCheckpointInput;
-}
-
-export interface GroupUpdateWithoutActivationDataInput {
-  code?: String;
-  bracelets?: BraceletUpdateManyWithoutGroupInput;
-}
-
-export interface CheckUpdateManyMutationInput {
-  timestamp?: DateTimeInput;
-}
-
-export interface BraceletUpdateManyWithoutGroupInput {
-  create?: BraceletCreateWithoutGroupInput[] | BraceletCreateWithoutGroupInput;
-  delete?: BraceletWhereUniqueInput[] | BraceletWhereUniqueInput;
-  connect?: BraceletWhereUniqueInput[] | BraceletWhereUniqueInput;
-  disconnect?: BraceletWhereUniqueInput[] | BraceletWhereUniqueInput;
-  update?:
-    | BraceletUpdateWithWhereUniqueWithoutGroupInput[]
-    | BraceletUpdateWithWhereUniqueWithoutGroupInput;
-  upsert?:
-    | BraceletUpsertWithWhereUniqueWithoutGroupInput[]
-    | BraceletUpsertWithWhereUniqueWithoutGroupInput;
-  deleteMany?: BraceletScalarWhereInput[] | BraceletScalarWhereInput;
-  updateMany?:
-    | BraceletUpdateManyWithWhereNestedInput[]
-    | BraceletUpdateManyWithWhereNestedInput;
-}
-
-export interface ActivationCreateInput {
-  user: UserCreateOneInput;
-  groups?: GroupCreateManyWithoutActivationInput;
-  products?: ProductCreateManyWithoutActivationsInput;
-}
-
-export interface ActivationWhereInput {
-  id?: ID_Input;
-  id_not?: ID_Input;
-  id_in?: ID_Input[] | ID_Input;
-  id_not_in?: ID_Input[] | ID_Input;
-  id_lt?: ID_Input;
-  id_lte?: ID_Input;
-  id_gt?: ID_Input;
-  id_gte?: ID_Input;
-  id_contains?: ID_Input;
-  id_not_contains?: ID_Input;
-  id_starts_with?: ID_Input;
-  id_not_starts_with?: ID_Input;
-  id_ends_with?: ID_Input;
-  id_not_ends_with?: ID_Input;
-  user?: UserWhereInput;
-  groups_every?: GroupWhereInput;
-  groups_some?: GroupWhereInput;
-  groups_none?: GroupWhereInput;
-  products_every?: ProductWhereInput;
-  products_some?: ProductWhereInput;
-  products_none?: ProductWhereInput;
-  AND?: ActivationWhereInput[] | ActivationWhereInput;
-  OR?: ActivationWhereInput[] | ActivationWhereInput;
-  NOT?: ActivationWhereInput[] | ActivationWhereInput;
-}
-
-export interface UserCreateInput {
-  username: String;
-  password: String;
-}
-
-export interface BraceletUpdateManyMutationInput {
-  code?: String;
-}
-
-export interface GroupCreateWithoutActivationInput {
-  code: String;
-  bracelets?: BraceletCreateManyWithoutGroupInput;
-}
-
-export interface GroupUpsertWithoutBraceletsInput {
-  update: GroupUpdateWithoutBraceletsDataInput;
-  create: GroupCreateWithoutBraceletsInput;
-}
-
-export interface BraceletCreateWithoutGroupInput {
-  code: String;
-  checks?: CheckCreateManyWithoutBraceletInput;
-}
-
-export interface ActivationUpsertWithoutGroupsInput {
-  update: ActivationUpdateWithoutGroupsDataInput;
-  create: ActivationCreateWithoutGroupsInput;
-}
-
-export interface CheckCreateWithoutBraceletInput {
-  timestamp: DateTimeInput;
-  checkpoint: CheckpointCreateOneWithoutChecksInput;
-}
-
-export interface CheckUpdateManyWithWhereNestedInput {
-  where: CheckScalarWhereInput;
-  data: CheckUpdateManyDataInput;
-}
-
-export interface CheckpointCreateWithoutChecksInput {
-  name: String;
-  products?: ProductCreateManyWithoutCheckpointInput;
-}
-
-export interface CheckUpdateManyDataInput {
-  timestamp?: DateTimeInput;
-}
-
-export interface ProductCreateWithoutCheckpointInput {
-  name: String;
-  description: String;
-  activations?: ActivationCreateManyWithoutProductsInput;
-  checkLimit?: Int;
-}
-
-export interface BraceletUpsertWithWhereUniqueWithoutGroupInput {
-  where: BraceletWhereUniqueInput;
-  update: BraceletUpdateWithoutGroupDataInput;
-  create: BraceletCreateWithoutGroupInput;
-}
-
-export interface CheckWhereInput {
-  timestamp?: DateTimeInput;
-  timestamp_not?: DateTimeInput;
-  timestamp_in?: DateTimeInput[] | DateTimeInput;
-  timestamp_not_in?: DateTimeInput[] | DateTimeInput;
-  timestamp_lt?: DateTimeInput;
-  timestamp_lte?: DateTimeInput;
-  timestamp_gt?: DateTimeInput;
-  timestamp_gte?: DateTimeInput;
-  bracelet?: BraceletWhereInput;
-  checkpoint?: CheckpointWhereInput;
-  AND?: CheckWhereInput[] | CheckWhereInput;
-  OR?: CheckWhereInput[] | CheckWhereInput;
-  NOT?: CheckWhereInput[] | CheckWhereInput;
-}
-
-export interface BraceletScalarWhereInput {
-  id?: ID_Input;
-  id_not?: ID_Input;
-  id_in?: ID_Input[] | ID_Input;
-  id_not_in?: ID_Input[] | ID_Input;
-  id_lt?: ID_Input;
-  id_lte?: ID_Input;
-  id_gt?: ID_Input;
-  id_gte?: ID_Input;
-  id_contains?: ID_Input;
-  id_not_contains?: ID_Input;
-  id_starts_with?: ID_Input;
-  id_not_starts_with?: ID_Input;
-  id_ends_with?: ID_Input;
-  id_not_ends_with?: ID_Input;
-  code?: String;
-  code_not?: String;
-  code_in?: String[] | String;
-  code_not_in?: String[] | String;
-  code_lt?: String;
-  code_lte?: String;
-  code_gt?: String;
-  code_gte?: String;
-  code_contains?: String;
-  code_not_contains?: String;
-  code_starts_with?: String;
-  code_not_starts_with?: String;
-  code_ends_with?: String;
-  code_not_ends_with?: String;
-  AND?: BraceletScalarWhereInput[] | BraceletScalarWhereInput;
-  OR?: BraceletScalarWhereInput[] | BraceletScalarWhereInput;
-  NOT?: BraceletScalarWhereInput[] | BraceletScalarWhereInput;
-}
-
-export interface GroupSubscriptionWhereInput {
-  mutation_in?: MutationType[] | MutationType;
-  updatedFields_contains?: String;
-  updatedFields_contains_every?: String[] | String;
-  updatedFields_contains_some?: String[] | String;
-  node?: GroupWhereInput;
-  AND?: GroupSubscriptionWhereInput[] | GroupSubscriptionWhereInput;
-  OR?: GroupSubscriptionWhereInput[] | GroupSubscriptionWhereInput;
-  NOT?: GroupSubscriptionWhereInput[] | GroupSubscriptionWhereInput;
-}
-
-export interface BraceletUpdateManyWithWhereNestedInput {
-  where: BraceletScalarWhereInput;
-  data: BraceletUpdateManyDataInput;
-}
-
-export interface BraceletSubscriptionWhereInput {
-  mutation_in?: MutationType[] | MutationType;
-  updatedFields_contains?: String;
-  updatedFields_contains_every?: String[] | String;
-  updatedFields_contains_some?: String[] | String;
-  node?: BraceletWhereInput;
-  AND?: BraceletSubscriptionWhereInput[] | BraceletSubscriptionWhereInput;
-  OR?: BraceletSubscriptionWhereInput[] | BraceletSubscriptionWhereInput;
-  NOT?: BraceletSubscriptionWhereInput[] | BraceletSubscriptionWhereInput;
-}
-
-export interface BraceletUpdateManyDataInput {
-  code?: String;
-}
-
-export interface UserUpdateInput {
-  username?: String;
-  password?: String;
-}
-
-export interface GroupUpsertWithWhereUniqueWithoutActivationInput {
-  where: GroupWhereUniqueInput;
-  update: GroupUpdateWithoutActivationDataInput;
-  create: GroupCreateWithoutActivationInput;
-}
-
-export interface GroupUpdateManyMutationInput {
-  code?: String;
-}
-
-export interface GroupScalarWhereInput {
-  code?: String;
-  code_not?: String;
-  code_in?: String[] | String;
-  code_not_in?: String[] | String;
-  code_lt?: String;
-  code_lte?: String;
-  code_gt?: String;
-  code_gte?: String;
-  code_contains?: String;
-  code_not_contains?: String;
-  code_starts_with?: String;
-  code_not_starts_with?: String;
-  code_ends_with?: String;
-  code_not_ends_with?: String;
-  AND?: GroupScalarWhereInput[] | GroupScalarWhereInput;
-  OR?: GroupScalarWhereInput[] | GroupScalarWhereInput;
-  NOT?: GroupScalarWhereInput[] | GroupScalarWhereInput;
-}
-
-export interface CheckpointUpdateManyMutationInput {
-  name?: String;
-}
-
-export interface GroupUpdateManyWithWhereNestedInput {
-  where: GroupScalarWhereInput;
-  data: GroupUpdateManyDataInput;
-}
-
-export interface ActivationUpsertWithWhereUniqueWithoutProductsInput {
-  where: ActivationWhereUniqueInput;
-  update: ActivationUpdateWithoutProductsDataInput;
-  create: ActivationCreateWithoutProductsInput;
-}
-
-export interface GroupUpdateManyDataInput {
-  code?: String;
-}
-
-export interface ActivationUpdateManyWithoutProductsInput {
+export interface ActivationCreateManyWithoutProductsInput {
   create?:
     | ActivationCreateWithoutProductsInput[]
     | ActivationCreateWithoutProductsInput;
+  connect?: ActivationWhereUniqueInput[] | ActivationWhereUniqueInput;
+}
+
+export interface UserUpdateOneRequiredWithoutCreatedGroupsInput {
+  create?: UserCreateWithoutCreatedGroupsInput;
+  update?: UserUpdateWithoutCreatedGroupsDataInput;
+  upsert?: UserUpsertWithoutCreatedGroupsInput;
+  connect?: UserWhereUniqueInput;
+}
+
+export interface GroupCreateManyWithoutActivationInput {
+  create?:
+    | GroupCreateWithoutActivationInput[]
+    | GroupCreateWithoutActivationInput;
+  connect?: GroupWhereUniqueInput[] | GroupWhereUniqueInput;
+}
+
+export interface UserUpdateWithoutCreatedGroupsDataInput {
+  username?: String;
+  password?: String;
+  activatedGroups?: ActivationUpdateManyWithoutOwnerInput;
+}
+
+export interface UserCreateOneWithoutCreatedGroupsInput {
+  create?: UserCreateWithoutCreatedGroupsInput;
+  connect?: UserWhereUniqueInput;
+}
+
+export interface ActivationUpdateManyWithoutOwnerInput {
+  create?:
+    | ActivationCreateWithoutOwnerInput[]
+    | ActivationCreateWithoutOwnerInput;
   delete?: ActivationWhereUniqueInput[] | ActivationWhereUniqueInput;
   connect?: ActivationWhereUniqueInput[] | ActivationWhereUniqueInput;
   disconnect?: ActivationWhereUniqueInput[] | ActivationWhereUniqueInput;
   update?:
-    | ActivationUpdateWithWhereUniqueWithoutProductsInput[]
-    | ActivationUpdateWithWhereUniqueWithoutProductsInput;
+    | ActivationUpdateWithWhereUniqueWithoutOwnerInput[]
+    | ActivationUpdateWithWhereUniqueWithoutOwnerInput;
   upsert?:
-    | ActivationUpsertWithWhereUniqueWithoutProductsInput[]
-    | ActivationUpsertWithWhereUniqueWithoutProductsInput;
+    | ActivationUpsertWithWhereUniqueWithoutOwnerInput[]
+    | ActivationUpsertWithWhereUniqueWithoutOwnerInput;
   deleteMany?: ActivationScalarWhereInput[] | ActivationScalarWhereInput;
+}
+
+export interface ActivationCreateManyWithoutOwnerInput {
+  create?:
+    | ActivationCreateWithoutOwnerInput[]
+    | ActivationCreateWithoutOwnerInput;
+  connect?: ActivationWhereUniqueInput[] | ActivationWhereUniqueInput;
+}
+
+export interface ActivationUpdateWithWhereUniqueWithoutOwnerInput {
+  where: ActivationWhereUniqueInput;
+  data: ActivationUpdateWithoutOwnerDataInput;
+}
+
+export interface ProductCreateManyWithoutActivationsInput {
+  create?:
+    | ProductCreateWithoutActivationsInput[]
+    | ProductCreateWithoutActivationsInput;
+  connect?: ProductWhereUniqueInput[] | ProductWhereUniqueInput;
+}
+
+export interface ActivationUpdateWithoutOwnerDataInput {
+  groups?: GroupUpdateManyWithoutActivationInput;
+  products?: ProductUpdateManyWithoutActivationsInput;
+}
+
+export interface CheckpointCreateOneWithoutProductsInput {
+  create?: CheckpointCreateWithoutProductsInput;
+  connect?: CheckpointWhereUniqueInput;
 }
 
 export interface ProductUpdateManyWithoutActivationsInput {
@@ -1187,23 +1339,11 @@ export interface ProductUpdateManyWithoutActivationsInput {
     | ProductUpdateManyWithWhereNestedInput;
 }
 
-export interface ProductUpdateManyWithoutCheckpointInput {
+export interface CheckCreateManyWithoutCheckpointInput {
   create?:
-    | ProductCreateWithoutCheckpointInput[]
-    | ProductCreateWithoutCheckpointInput;
-  delete?: ProductWhereUniqueInput[] | ProductWhereUniqueInput;
-  connect?: ProductWhereUniqueInput[] | ProductWhereUniqueInput;
-  disconnect?: ProductWhereUniqueInput[] | ProductWhereUniqueInput;
-  update?:
-    | ProductUpdateWithWhereUniqueWithoutCheckpointInput[]
-    | ProductUpdateWithWhereUniqueWithoutCheckpointInput;
-  upsert?:
-    | ProductUpsertWithWhereUniqueWithoutCheckpointInput[]
-    | ProductUpsertWithWhereUniqueWithoutCheckpointInput;
-  deleteMany?: ProductScalarWhereInput[] | ProductScalarWhereInput;
-  updateMany?:
-    | ProductUpdateManyWithWhereNestedInput[]
-    | ProductUpdateManyWithWhereNestedInput;
+    | CheckCreateWithoutCheckpointInput[]
+    | CheckCreateWithoutCheckpointInput;
+  connect?: CheckWhereUniqueInput[] | CheckWhereUniqueInput;
 }
 
 export interface ProductUpdateWithWhereUniqueWithoutActivationsInput {
@@ -1211,22 +1351,21 @@ export interface ProductUpdateWithWhereUniqueWithoutActivationsInput {
   data: ProductUpdateWithoutActivationsDataInput;
 }
 
-export interface GroupCreateManyWithoutActivationInput {
-  create?:
-    | GroupCreateWithoutActivationInput[]
-    | GroupCreateWithoutActivationInput;
-  connect?: GroupWhereUniqueInput[] | GroupWhereUniqueInput;
+export interface BraceletCreateOneWithoutChecksInput {
+  create?: BraceletCreateWithoutChecksInput;
+  connect?: BraceletWhereUniqueInput;
 }
 
 export interface ProductUpdateWithoutActivationsDataInput {
   name?: String;
   description?: String;
   checkpoint?: CheckpointUpdateOneRequiredWithoutProductsInput;
-  checkLimit?: Int;
+  checklimit?: Int;
 }
 
-export interface CheckCreateManyWithoutBraceletInput {
-  create?: CheckCreateWithoutBraceletInput[] | CheckCreateWithoutBraceletInput;
+export interface GroupCreateOneWithoutBraceletsInput {
+  create?: GroupCreateWithoutBraceletsInput;
+  connect?: GroupWhereUniqueInput;
 }
 
 export interface CheckpointUpdateOneRequiredWithoutProductsInput {
@@ -1236,11 +1375,15 @@ export interface CheckpointUpdateOneRequiredWithoutProductsInput {
   connect?: CheckpointWhereUniqueInput;
 }
 
-export interface ProductCreateManyWithoutCheckpointInput {
-  create?:
-    | ProductCreateWithoutCheckpointInput[]
-    | ProductCreateWithoutCheckpointInput;
-  connect?: ProductWhereUniqueInput[] | ProductWhereUniqueInput;
+export interface UserSubscriptionWhereInput {
+  mutation_in?: MutationType[] | MutationType;
+  updatedFields_contains?: String;
+  updatedFields_contains_every?: String[] | String;
+  updatedFields_contains_some?: String[] | String;
+  node?: UserWhereInput;
+  AND?: UserSubscriptionWhereInput[] | UserSubscriptionWhereInput;
+  OR?: UserSubscriptionWhereInput[] | UserSubscriptionWhereInput;
+  NOT?: UserSubscriptionWhereInput[] | UserSubscriptionWhereInput;
 }
 
 export interface CheckpointUpdateWithoutProductsDataInput {
@@ -1248,21 +1391,30 @@ export interface CheckpointUpdateWithoutProductsDataInput {
   checks?: CheckUpdateManyWithoutCheckpointInput;
 }
 
-export interface ProductSubscriptionWhereInput {
+export interface CheckSubscriptionWhereInput {
   mutation_in?: MutationType[] | MutationType;
   updatedFields_contains?: String;
   updatedFields_contains_every?: String[] | String;
   updatedFields_contains_some?: String[] | String;
-  node?: ProductWhereInput;
-  AND?: ProductSubscriptionWhereInput[] | ProductSubscriptionWhereInput;
-  OR?: ProductSubscriptionWhereInput[] | ProductSubscriptionWhereInput;
-  NOT?: ProductSubscriptionWhereInput[] | ProductSubscriptionWhereInput;
+  node?: CheckWhereInput;
+  AND?: CheckSubscriptionWhereInput[] | CheckSubscriptionWhereInput;
+  OR?: CheckSubscriptionWhereInput[] | CheckSubscriptionWhereInput;
+  NOT?: CheckSubscriptionWhereInput[] | CheckSubscriptionWhereInput;
 }
 
 export interface CheckUpdateManyWithoutCheckpointInput {
   create?:
     | CheckCreateWithoutCheckpointInput[]
     | CheckCreateWithoutCheckpointInput;
+  delete?: CheckWhereUniqueInput[] | CheckWhereUniqueInput;
+  connect?: CheckWhereUniqueInput[] | CheckWhereUniqueInput;
+  disconnect?: CheckWhereUniqueInput[] | CheckWhereUniqueInput;
+  update?:
+    | CheckUpdateWithWhereUniqueWithoutCheckpointInput[]
+    | CheckUpdateWithWhereUniqueWithoutCheckpointInput;
+  upsert?:
+    | CheckUpsertWithWhereUniqueWithoutCheckpointInput[]
+    | CheckUpsertWithWhereUniqueWithoutCheckpointInput;
   deleteMany?: CheckScalarWhereInput[] | CheckScalarWhereInput;
   updateMany?:
     | CheckUpdateManyWithWhereNestedInput[]
@@ -1274,15 +1426,228 @@ export interface UserUpdateManyMutationInput {
   password?: String;
 }
 
+export interface CheckUpdateWithWhereUniqueWithoutCheckpointInput {
+  where: CheckWhereUniqueInput;
+  data: CheckUpdateWithoutCheckpointDataInput;
+}
+
+export interface ProductUpdateManyMutationInput {
+  name?: String;
+  description?: String;
+  checklimit?: Int;
+}
+
+export interface CheckUpdateWithoutCheckpointDataInput {
+  timestamp?: DateTimeInput;
+  bracelet?: BraceletUpdateOneRequiredWithoutChecksInput;
+}
+
+export interface GroupUpdateManyMutationInput {
+  code?: String;
+}
+
+export interface BraceletUpdateOneRequiredWithoutChecksInput {
+  create?: BraceletCreateWithoutChecksInput;
+  update?: BraceletUpdateWithoutChecksDataInput;
+  upsert?: BraceletUpsertWithoutChecksInput;
+  connect?: BraceletWhereUniqueInput;
+}
+
+export type GroupWhereUniqueInput = AtLeastOne<{
+  id: ID_Input;
+  code?: String;
+}>;
+
+export interface BraceletUpdateWithoutChecksDataInput {
+  code?: String;
+  group?: GroupUpdateOneRequiredWithoutBraceletsInput;
+}
+
+export type ProductWhereUniqueInput = AtLeastOne<{
+  id: ID_Input;
+  name?: String;
+}>;
+
+export interface GroupUpdateOneRequiredWithoutBraceletsInput {
+  create?: GroupCreateWithoutBraceletsInput;
+  update?: GroupUpdateWithoutBraceletsDataInput;
+  upsert?: GroupUpsertWithoutBraceletsInput;
+  connect?: GroupWhereUniqueInput;
+}
+
+export type UserWhereUniqueInput = AtLeastOne<{
+  id: ID_Input;
+  username?: String;
+}>;
+
+export interface GroupUpdateWithoutBraceletsDataInput {
+  owner?: UserUpdateOneRequiredWithoutCreatedGroupsInput;
+  code?: String;
+  activation?: ActivationUpdateOneWithoutGroupsInput;
+}
+
+export interface GroupUpsertWithWhereUniqueWithoutOwnerInput {
+  where: GroupWhereUniqueInput;
+  update: GroupUpdateWithoutOwnerDataInput;
+  create: GroupCreateWithoutOwnerInput;
+}
+
+export interface ActivationUpdateOneWithoutGroupsInput {
+  create?: ActivationCreateWithoutGroupsInput;
+  update?: ActivationUpdateWithoutGroupsDataInput;
+  upsert?: ActivationUpsertWithoutGroupsInput;
+  delete?: Boolean;
+  disconnect?: Boolean;
+  connect?: ActivationWhereUniqueInput;
+}
+
+export interface UserCreateWithoutActivatedGroupsInput {
+  username: String;
+  password: String;
+  createdGroups?: GroupCreateManyWithoutOwnerInput;
+}
+
+export interface ActivationUpdateWithoutGroupsDataInput {
+  owner?: UserUpdateOneRequiredWithoutActivatedGroupsInput;
+  products?: ProductUpdateManyWithoutActivationsInput;
+}
+
+export interface BraceletCreateWithoutGroupInput {
+  code: String;
+  checks?: CheckCreateManyWithoutBraceletInput;
+}
+
+export interface ActivationUpsertWithoutGroupsInput {
+  update: ActivationUpdateWithoutGroupsDataInput;
+  create: ActivationCreateWithoutGroupsInput;
+}
+
+export interface CheckpointCreateWithoutChecksInput {
+  name: String;
+  products?: ProductCreateManyWithoutCheckpointInput;
+}
+
+export interface GroupUpsertWithoutBraceletsInput {
+  update: GroupUpdateWithoutBraceletsDataInput;
+  create: GroupCreateWithoutBraceletsInput;
+}
+
+export interface ActivationCreateWithoutProductsInput {
+  owner: UserCreateOneWithoutActivatedGroupsInput;
+  groups?: GroupCreateManyWithoutActivationInput;
+}
+
+export interface BraceletUpsertWithoutChecksInput {
+  update: BraceletUpdateWithoutChecksDataInput;
+  create: BraceletCreateWithoutChecksInput;
+}
+
+export interface UserCreateWithoutCreatedGroupsInput {
+  username: String;
+  password: String;
+  activatedGroups?: ActivationCreateManyWithoutOwnerInput;
+}
+
+export interface CheckUpsertWithWhereUniqueWithoutCheckpointInput {
+  where: CheckWhereUniqueInput;
+  update: CheckUpdateWithoutCheckpointDataInput;
+  create: CheckCreateWithoutCheckpointInput;
+}
+
+export interface ProductCreateWithoutActivationsInput {
+  name: String;
+  description: String;
+  checkpoint: CheckpointCreateOneWithoutProductsInput;
+  checklimit?: Int;
+}
+
+export interface CheckScalarWhereInput {
+  id?: ID_Input;
+  id_not?: ID_Input;
+  id_in?: ID_Input[] | ID_Input;
+  id_not_in?: ID_Input[] | ID_Input;
+  id_lt?: ID_Input;
+  id_lte?: ID_Input;
+  id_gt?: ID_Input;
+  id_gte?: ID_Input;
+  id_contains?: ID_Input;
+  id_not_contains?: ID_Input;
+  id_starts_with?: ID_Input;
+  id_not_starts_with?: ID_Input;
+  id_ends_with?: ID_Input;
+  id_not_ends_with?: ID_Input;
+  createdAt?: DateTimeInput;
+  createdAt_not?: DateTimeInput;
+  createdAt_in?: DateTimeInput[] | DateTimeInput;
+  createdAt_not_in?: DateTimeInput[] | DateTimeInput;
+  createdAt_lt?: DateTimeInput;
+  createdAt_lte?: DateTimeInput;
+  createdAt_gt?: DateTimeInput;
+  createdAt_gte?: DateTimeInput;
+  updatedAt?: DateTimeInput;
+  updatedAt_not?: DateTimeInput;
+  updatedAt_in?: DateTimeInput[] | DateTimeInput;
+  updatedAt_not_in?: DateTimeInput[] | DateTimeInput;
+  updatedAt_lt?: DateTimeInput;
+  updatedAt_lte?: DateTimeInput;
+  updatedAt_gt?: DateTimeInput;
+  updatedAt_gte?: DateTimeInput;
+  timestamp?: DateTimeInput;
+  timestamp_not?: DateTimeInput;
+  timestamp_in?: DateTimeInput[] | DateTimeInput;
+  timestamp_not_in?: DateTimeInput[] | DateTimeInput;
+  timestamp_lt?: DateTimeInput;
+  timestamp_lte?: DateTimeInput;
+  timestamp_gt?: DateTimeInput;
+  timestamp_gte?: DateTimeInput;
+  AND?: CheckScalarWhereInput[] | CheckScalarWhereInput;
+  OR?: CheckScalarWhereInput[] | CheckScalarWhereInput;
+  NOT?: CheckScalarWhereInput[] | CheckScalarWhereInput;
+}
+
+export interface CheckCreateWithoutCheckpointInput {
+  timestamp: DateTimeInput;
+  bracelet: BraceletCreateOneWithoutChecksInput;
+}
+
+export interface CheckUpdateManyWithWhereNestedInput {
+  where: CheckScalarWhereInput;
+  data: CheckUpdateManyDataInput;
+}
+
+export interface GroupCreateWithoutBraceletsInput {
+  owner: UserCreateOneWithoutCreatedGroupsInput;
+  code: String;
+  activation?: ActivationCreateOneWithoutGroupsInput;
+}
+
+export interface CheckUpdateManyDataInput {
+  timestamp?: DateTimeInput;
+}
+
+export interface ActivationSubscriptionWhereInput {
+  mutation_in?: MutationType[] | MutationType;
+  updatedFields_contains?: String;
+  updatedFields_contains_every?: String[] | String;
+  updatedFields_contains_some?: String[] | String;
+  node?: ActivationWhereInput;
+  AND?: ActivationSubscriptionWhereInput[] | ActivationSubscriptionWhereInput;
+  OR?: ActivationSubscriptionWhereInput[] | ActivationSubscriptionWhereInput;
+  NOT?: ActivationSubscriptionWhereInput[] | ActivationSubscriptionWhereInput;
+}
+
 export interface CheckpointUpsertWithoutProductsInput {
   update: CheckpointUpdateWithoutProductsDataInput;
   create: CheckpointCreateWithoutProductsInput;
 }
 
-export type CheckpointWhereUniqueInput = AtLeastOne<{
-  id: ID_Input;
-  name?: String;
-}>;
+export interface ProductCreateInput {
+  name: String;
+  description: String;
+  activations?: ActivationCreateManyWithoutProductsInput;
+  checkpoint: CheckpointCreateOneWithoutProductsInput;
+  checklimit?: Int;
+}
 
 export interface ProductUpsertWithWhereUniqueWithoutActivationsInput {
   where: ProductWhereUniqueInput;
@@ -1290,9 +1655,10 @@ export interface ProductUpsertWithWhereUniqueWithoutActivationsInput {
   create: ProductCreateWithoutActivationsInput;
 }
 
-export interface ActivationUpdateWithWhereUniqueWithoutProductsInput {
-  where: ActivationWhereUniqueInput;
-  data: ActivationUpdateWithoutProductsDataInput;
+export interface CheckpointCreateInput {
+  name: String;
+  products?: ProductCreateManyWithoutCheckpointInput;
+  checks?: CheckCreateManyWithoutCheckpointInput;
 }
 
 export interface ProductScalarWhereInput {
@@ -1338,72 +1704,17 @@ export interface ProductScalarWhereInput {
   description_not_starts_with?: String;
   description_ends_with?: String;
   description_not_ends_with?: String;
-  checkLimit?: Int;
-  checkLimit_not?: Int;
-  checkLimit_in?: Int[] | Int;
-  checkLimit_not_in?: Int[] | Int;
-  checkLimit_lt?: Int;
-  checkLimit_lte?: Int;
-  checkLimit_gt?: Int;
-  checkLimit_gte?: Int;
+  checklimit?: Int;
+  checklimit_not?: Int;
+  checklimit_in?: Int[] | Int;
+  checklimit_not_in?: Int[] | Int;
+  checklimit_lt?: Int;
+  checklimit_lte?: Int;
+  checklimit_gt?: Int;
+  checklimit_gte?: Int;
   AND?: ProductScalarWhereInput[] | ProductScalarWhereInput;
   OR?: ProductScalarWhereInput[] | ProductScalarWhereInput;
   NOT?: ProductScalarWhereInput[] | ProductScalarWhereInput;
-}
-
-export interface CheckpointCreateInput {
-  name: String;
-  products?: ProductCreateManyWithoutCheckpointInput;
-  checks?: CheckCreateManyWithoutCheckpointInput;
-}
-
-export interface ProductUpdateManyWithWhereNestedInput {
-  where: ProductScalarWhereInput;
-  data: ProductUpdateManyDataInput;
-}
-
-export interface BraceletCreateManyWithoutGroupInput {
-  create?: BraceletCreateWithoutGroupInput[] | BraceletCreateWithoutGroupInput;
-  connect?: BraceletWhereUniqueInput[] | BraceletWhereUniqueInput;
-}
-
-export interface ProductUpdateManyDataInput {
-  name?: String;
-  description?: String;
-  checkLimit?: Int;
-}
-
-export interface ActivationCreateManyWithoutProductsInput {
-  create?:
-    | ActivationCreateWithoutProductsInput[]
-    | ActivationCreateWithoutProductsInput;
-  connect?: ActivationWhereUniqueInput[] | ActivationWhereUniqueInput;
-}
-
-export interface ActivationUpdateWithoutGroupsDataInput {
-  user?: UserUpdateOneRequiredInput;
-  products?: ProductUpdateManyWithoutActivationsInput;
-}
-
-export interface ProductUpdateInput {
-  name?: String;
-  description?: String;
-  activations?: ActivationUpdateManyWithoutProductsInput;
-  checkpoint?: CheckpointUpdateOneRequiredWithoutProductsInput;
-  checkLimit?: Int;
-}
-
-export interface GroupUpdateOneRequiredWithoutBraceletsInput {
-  create?: GroupCreateWithoutBraceletsInput;
-  update?: GroupUpdateWithoutBraceletsDataInput;
-  upsert?: GroupUpsertWithoutBraceletsInput;
-  connect?: GroupWhereUniqueInput;
-}
-
-export interface BraceletUpdateInput {
-  code?: String;
-  group?: GroupUpdateOneRequiredWithoutBraceletsInput;
-  checks?: CheckUpdateManyWithoutBraceletInput;
 }
 
 export interface BraceletCreateInput {
@@ -1412,13 +1723,39 @@ export interface BraceletCreateInput {
   checks?: CheckCreateManyWithoutBraceletInput;
 }
 
-export interface ActivationUpdateOneWithoutGroupsInput {
-  create?: ActivationCreateWithoutGroupsInput;
-  update?: ActivationUpdateWithoutGroupsDataInput;
-  upsert?: ActivationUpsertWithoutGroupsInput;
-  delete?: Boolean;
-  disconnect?: Boolean;
-  connect?: ActivationWhereUniqueInput;
+export interface ProductUpdateManyWithWhereNestedInput {
+  where: ProductScalarWhereInput;
+  data: ProductUpdateManyDataInput;
+}
+
+export interface GroupCreateWithoutOwnerInput {
+  code: String;
+  bracelets?: BraceletCreateManyWithoutGroupInput;
+  activation?: ActivationCreateOneWithoutGroupsInput;
+}
+
+export interface ProductUpdateManyDataInput {
+  name?: String;
+  description?: String;
+  checklimit?: Int;
+}
+
+export interface ProductCreateWithoutCheckpointInput {
+  name: String;
+  description: String;
+  activations?: ActivationCreateManyWithoutProductsInput;
+  checklimit?: Int;
+}
+
+export interface ActivationUpsertWithWhereUniqueWithoutOwnerInput {
+  where: ActivationWhereUniqueInput;
+  update: ActivationUpdateWithoutOwnerDataInput;
+  create: ActivationCreateWithoutOwnerInput;
+}
+
+export interface ActivationCreateWithoutOwnerInput {
+  groups?: GroupCreateManyWithoutActivationInput;
+  products?: ProductCreateManyWithoutActivationsInput;
 }
 
 export interface ActivationScalarWhereInput {
@@ -1436,35 +1773,165 @@ export interface ActivationScalarWhereInput {
   id_not_starts_with?: ID_Input;
   id_ends_with?: ID_Input;
   id_not_ends_with?: ID_Input;
+  createdAt?: DateTimeInput;
+  createdAt_not?: DateTimeInput;
+  createdAt_in?: DateTimeInput[] | DateTimeInput;
+  createdAt_not_in?: DateTimeInput[] | DateTimeInput;
+  createdAt_lt?: DateTimeInput;
+  createdAt_lte?: DateTimeInput;
+  createdAt_gt?: DateTimeInput;
+  createdAt_gte?: DateTimeInput;
+  updatedAt?: DateTimeInput;
+  updatedAt_not?: DateTimeInput;
+  updatedAt_in?: DateTimeInput[] | DateTimeInput;
+  updatedAt_not_in?: DateTimeInput[] | DateTimeInput;
+  updatedAt_lt?: DateTimeInput;
+  updatedAt_lte?: DateTimeInput;
+  updatedAt_gt?: DateTimeInput;
+  updatedAt_gte?: DateTimeInput;
   AND?: ActivationScalarWhereInput[] | ActivationScalarWhereInput;
   OR?: ActivationScalarWhereInput[] | ActivationScalarWhereInput;
   NOT?: ActivationScalarWhereInput[] | ActivationScalarWhereInput;
 }
 
-export interface CheckpointSubscriptionWhereInput {
+export interface BraceletCreateWithoutChecksInput {
+  code: String;
+  group: GroupCreateOneWithoutBraceletsInput;
+}
+
+export interface UserUpsertWithoutCreatedGroupsInput {
+  update: UserUpdateWithoutCreatedGroupsDataInput;
+  create: UserCreateWithoutCreatedGroupsInput;
+}
+
+export interface UserCreateInput {
+  username: String;
+  password: String;
+  createdGroups?: GroupCreateManyWithoutOwnerInput;
+  activatedGroups?: ActivationCreateManyWithoutOwnerInput;
+}
+
+export interface GroupUpsertWithWhereUniqueWithoutActivationInput {
+  where: GroupWhereUniqueInput;
+  update: GroupUpdateWithoutActivationDataInput;
+  create: GroupCreateWithoutActivationInput;
+}
+
+export interface CheckCreateInput {
+  timestamp: DateTimeInput;
+  bracelet: BraceletCreateOneWithoutChecksInput;
+  checkpoint: CheckpointCreateOneWithoutChecksInput;
+}
+
+export interface GroupScalarWhereInput {
+  id?: ID_Input;
+  id_not?: ID_Input;
+  id_in?: ID_Input[] | ID_Input;
+  id_not_in?: ID_Input[] | ID_Input;
+  id_lt?: ID_Input;
+  id_lte?: ID_Input;
+  id_gt?: ID_Input;
+  id_gte?: ID_Input;
+  id_contains?: ID_Input;
+  id_not_contains?: ID_Input;
+  id_starts_with?: ID_Input;
+  id_not_starts_with?: ID_Input;
+  id_ends_with?: ID_Input;
+  id_not_ends_with?: ID_Input;
+  createdAt?: DateTimeInput;
+  createdAt_not?: DateTimeInput;
+  createdAt_in?: DateTimeInput[] | DateTimeInput;
+  createdAt_not_in?: DateTimeInput[] | DateTimeInput;
+  createdAt_lt?: DateTimeInput;
+  createdAt_lte?: DateTimeInput;
+  createdAt_gt?: DateTimeInput;
+  createdAt_gte?: DateTimeInput;
+  updatedAt?: DateTimeInput;
+  updatedAt_not?: DateTimeInput;
+  updatedAt_in?: DateTimeInput[] | DateTimeInput;
+  updatedAt_not_in?: DateTimeInput[] | DateTimeInput;
+  updatedAt_lt?: DateTimeInput;
+  updatedAt_lte?: DateTimeInput;
+  updatedAt_gt?: DateTimeInput;
+  updatedAt_gte?: DateTimeInput;
+  code?: String;
+  code_not?: String;
+  code_in?: String[] | String;
+  code_not_in?: String[] | String;
+  code_lt?: String;
+  code_lte?: String;
+  code_gt?: String;
+  code_gte?: String;
+  code_contains?: String;
+  code_not_contains?: String;
+  code_starts_with?: String;
+  code_not_starts_with?: String;
+  code_ends_with?: String;
+  code_not_ends_with?: String;
+  AND?: GroupScalarWhereInput[] | GroupScalarWhereInput;
+  OR?: GroupScalarWhereInput[] | GroupScalarWhereInput;
+  NOT?: GroupScalarWhereInput[] | GroupScalarWhereInput;
+}
+
+export interface CheckCreateWithoutBraceletInput {
+  timestamp: DateTimeInput;
+  checkpoint: CheckpointCreateOneWithoutChecksInput;
+}
+
+export interface ProductUpsertWithWhereUniqueWithoutCheckpointInput {
+  where: ProductWhereUniqueInput;
+  update: ProductUpdateWithoutCheckpointDataInput;
+  create: ProductCreateWithoutCheckpointInput;
+}
+
+export interface ActivationUpsertWithWhereUniqueWithoutProductsInput {
+  where: ActivationWhereUniqueInput;
+  update: ActivationUpdateWithoutProductsDataInput;
+  create: ActivationCreateWithoutProductsInput;
+}
+
+export interface GroupUpdateManyDataInput {
+  code?: String;
+}
+
+export interface GroupUpdateManyWithWhereNestedInput {
+  where: GroupScalarWhereInput;
+  data: GroupUpdateManyDataInput;
+}
+
+export interface GroupCreateWithoutActivationInput {
+  owner: UserCreateOneWithoutCreatedGroupsInput;
+  code: String;
+  bracelets?: BraceletCreateManyWithoutGroupInput;
+}
+
+export interface ActivationCreateInput {
+  owner: UserCreateOneWithoutActivatedGroupsInput;
+  groups?: GroupCreateManyWithoutActivationInput;
+  products?: ProductCreateManyWithoutActivationsInput;
+}
+
+export interface GroupCreateInput {
+  owner: UserCreateOneWithoutCreatedGroupsInput;
+  code: String;
+  bracelets?: BraceletCreateManyWithoutGroupInput;
+  activation?: ActivationCreateOneWithoutGroupsInput;
+}
+
+export interface GroupSubscriptionWhereInput {
   mutation_in?: MutationType[] | MutationType;
   updatedFields_contains?: String;
   updatedFields_contains_every?: String[] | String;
   updatedFields_contains_some?: String[] | String;
-  node?: CheckpointWhereInput;
-  AND?: CheckpointSubscriptionWhereInput[] | CheckpointSubscriptionWhereInput;
-  OR?: CheckpointSubscriptionWhereInput[] | CheckpointSubscriptionWhereInput;
-  NOT?: CheckpointSubscriptionWhereInput[] | CheckpointSubscriptionWhereInput;
+  node?: GroupWhereInput;
+  AND?: GroupSubscriptionWhereInput[] | GroupSubscriptionWhereInput;
+  OR?: GroupSubscriptionWhereInput[] | GroupSubscriptionWhereInput;
+  NOT?: GroupSubscriptionWhereInput[] | GroupSubscriptionWhereInput;
 }
 
-export interface CheckpointCreateOneWithoutChecksInput {
-  create?: CheckpointCreateWithoutChecksInput;
-  connect?: CheckpointWhereUniqueInput;
-}
-
-export interface UserCreateOneInput {
-  create?: UserCreateInput;
-  connect?: UserWhereUniqueInput;
-}
-
-export interface ProductUpdateWithWhereUniqueWithoutCheckpointInput {
-  where: ProductWhereUniqueInput;
-  data: ProductUpdateWithoutCheckpointDataInput;
+export interface CheckpointCreateWithoutProductsInput {
+  name: String;
+  checks?: CheckCreateManyWithoutCheckpointInput;
 }
 
 export interface NodeNode {
@@ -1473,6 +1940,8 @@ export interface NodeNode {
 
 export interface UserPreviousValues {
   id: ID_Output;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
   username: String;
   password: String;
 }
@@ -1481,6 +1950,8 @@ export interface UserPreviousValuesPromise
   extends Promise<UserPreviousValues>,
     Fragmentable {
   id: () => Promise<ID_Output>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
   username: () => Promise<String>;
   password: () => Promise<String>;
 }
@@ -1489,35 +1960,39 @@ export interface UserPreviousValuesSubscription
   extends Promise<AsyncIterator<UserPreviousValues>>,
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   username: () => Promise<AsyncIterator<String>>;
   password: () => Promise<AsyncIterator<String>>;
 }
 
-export interface CheckConnection {}
-
-export interface CheckConnectionPromise
-  extends Promise<CheckConnection>,
-    Fragmentable {
-  pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<CheckEdge>>() => T;
-  aggregate: <T = AggregateCheckPromise>() => T;
+export interface AggregateBracelet {
+  count: Int;
 }
 
-export interface CheckConnectionSubscription
-  extends Promise<AsyncIterator<CheckConnection>>,
+export interface AggregateBraceletPromise
+  extends Promise<AggregateBracelet>,
     Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<CheckEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateCheckSubscription>() => T;
+  count: () => Promise<Int>;
+}
+
+export interface AggregateBraceletSubscription
+  extends Promise<AsyncIterator<AggregateBracelet>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
 }
 
 export interface Checkpoint {
   id: ID_Output;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
   name: String;
 }
 
 export interface CheckpointPromise extends Promise<Checkpoint>, Fragmentable {
   id: () => Promise<ID_Output>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
   name: () => Promise<String>;
   products: <T = FragmentableArray<Product>>(
     args?: {
@@ -1547,6 +2022,8 @@ export interface CheckpointSubscription
   extends Promise<AsyncIterator<Checkpoint>>,
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   name: () => Promise<AsyncIterator<String>>;
   products: <T = Promise<AsyncIterator<ProductSubscription>>>(
     args?: {
@@ -1572,22 +2049,6 @@ export interface CheckpointSubscription
   ) => T;
 }
 
-export interface AggregateBracelet {
-  count: Int;
-}
-
-export interface AggregateBraceletPromise
-  extends Promise<AggregateBracelet>,
-    Fragmentable {
-  count: () => Promise<Int>;
-}
-
-export interface AggregateBraceletSubscription
-  extends Promise<AsyncIterator<AggregateBracelet>>,
-    Fragmentable {
-  count: () => Promise<AsyncIterator<Int>>;
-}
-
 export interface BraceletEdge {
   cursor: String;
 }
@@ -1606,58 +2067,31 @@ export interface BraceletEdgeSubscription
   cursor: () => Promise<AsyncIterator<String>>;
 }
 
-export interface BatchPayload {
-  count: Long;
+export interface Check {
+  id: ID_Output;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
+  timestamp: DateTimeOutput;
 }
 
-export interface BatchPayloadPromise
-  extends Promise<BatchPayload>,
+export interface CheckPromise extends Promise<Check>, Fragmentable {
+  id: () => Promise<ID_Output>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+  timestamp: () => Promise<DateTimeOutput>;
+  bracelet: <T = BraceletPromise>() => T;
+  checkpoint: <T = CheckpointPromise>() => T;
+}
+
+export interface CheckSubscription
+  extends Promise<AsyncIterator<Check>>,
     Fragmentable {
-  count: () => Promise<Long>;
-}
-
-export interface BatchPayloadSubscription
-  extends Promise<AsyncIterator<BatchPayload>>,
-    Fragmentable {
-  count: () => Promise<AsyncIterator<Long>>;
-}
-
-export interface Group {
-  code: String;
-}
-
-export interface GroupPromise extends Promise<Group>, Fragmentable {
-  code: () => Promise<String>;
-  bracelets: <T = FragmentableArray<Bracelet>>(
-    args?: {
-      where?: BraceletWhereInput;
-      orderBy?: BraceletOrderByInput;
-      skip?: Int;
-      after?: String;
-      before?: String;
-      first?: Int;
-      last?: Int;
-    }
-  ) => T;
-  activation: <T = ActivationPromise>() => T;
-}
-
-export interface GroupSubscription
-  extends Promise<AsyncIterator<Group>>,
-    Fragmentable {
-  code: () => Promise<AsyncIterator<String>>;
-  bracelets: <T = Promise<AsyncIterator<BraceletSubscription>>>(
-    args?: {
-      where?: BraceletWhereInput;
-      orderBy?: BraceletOrderByInput;
-      skip?: Int;
-      after?: String;
-      before?: String;
-      first?: Int;
-      last?: Int;
-    }
-  ) => T;
-  activation: <T = ActivationSubscription>() => T;
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  timestamp: () => Promise<AsyncIterator<DateTimeOutput>>;
+  bracelet: <T = BraceletSubscription>() => T;
+  checkpoint: <T = CheckpointSubscription>() => T;
 }
 
 export interface BraceletConnection {}
@@ -1678,22 +2112,53 @@ export interface BraceletConnectionSubscription
   aggregate: <T = AggregateBraceletSubscription>() => T;
 }
 
-export interface Check {
-  timestamp: DateTimeOutput;
+export interface Group {
+  id: ID_Output;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
+  code: String;
 }
 
-export interface CheckPromise extends Promise<Check>, Fragmentable {
-  timestamp: () => Promise<DateTimeOutput>;
-  bracelet: <T = BraceletPromise>() => T;
-  checkpoint: <T = CheckpointPromise>() => T;
+export interface GroupPromise extends Promise<Group>, Fragmentable {
+  id: () => Promise<ID_Output>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+  owner: <T = UserPromise>() => T;
+  code: () => Promise<String>;
+  bracelets: <T = FragmentableArray<Bracelet>>(
+    args?: {
+      where?: BraceletWhereInput;
+      orderBy?: BraceletOrderByInput;
+      skip?: Int;
+      after?: String;
+      before?: String;
+      first?: Int;
+      last?: Int;
+    }
+  ) => T;
+  activation: <T = ActivationPromise>() => T;
 }
 
-export interface CheckSubscription
-  extends Promise<AsyncIterator<Check>>,
+export interface GroupSubscription
+  extends Promise<AsyncIterator<Group>>,
     Fragmentable {
-  timestamp: () => Promise<AsyncIterator<DateTimeOutput>>;
-  bracelet: <T = BraceletSubscription>() => T;
-  checkpoint: <T = CheckpointSubscription>() => T;
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  owner: <T = UserSubscription>() => T;
+  code: () => Promise<AsyncIterator<String>>;
+  bracelets: <T = Promise<AsyncIterator<BraceletSubscription>>>(
+    args?: {
+      where?: BraceletWhereInput;
+      orderBy?: BraceletOrderByInput;
+      skip?: Int;
+      after?: String;
+      before?: String;
+      first?: Int;
+      last?: Int;
+    }
+  ) => T;
+  activation: <T = ActivationSubscription>() => T;
 }
 
 export interface AggregateActivation {
@@ -1728,51 +2193,72 @@ export interface UserEdgeSubscription
   cursor: () => Promise<AsyncIterator<String>>;
 }
 
-export interface ActivationEdge {
-  cursor: String;
+export interface AggregateUser {
+  count: Int;
 }
 
-export interface ActivationEdgePromise
-  extends Promise<ActivationEdge>,
+export interface AggregateUserPromise
+  extends Promise<AggregateUser>,
     Fragmentable {
-  node: <T = ActivationPromise>() => T;
-  cursor: () => Promise<String>;
+  count: () => Promise<Int>;
 }
 
-export interface ActivationEdgeSubscription
-  extends Promise<AsyncIterator<ActivationEdge>>,
+export interface AggregateUserSubscription
+  extends Promise<AsyncIterator<AggregateUser>>,
     Fragmentable {
-  node: <T = ActivationSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
+  count: () => Promise<AsyncIterator<Int>>;
 }
 
-export interface User {
-  id: ID_Output;
-  username: String;
-  password: String;
+export interface ProductSubscriptionPayload {
+  mutation: MutationType;
+  updatedFields?: String[];
 }
 
-export interface UserPromise extends Promise<User>, Fragmentable {
-  id: () => Promise<ID_Output>;
-  username: () => Promise<String>;
-  password: () => Promise<String>;
-}
-
-export interface UserSubscription
-  extends Promise<AsyncIterator<User>>,
+export interface ProductSubscriptionPayloadPromise
+  extends Promise<ProductSubscriptionPayload>,
     Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  username: () => Promise<AsyncIterator<String>>;
-  password: () => Promise<AsyncIterator<String>>;
+  mutation: () => Promise<MutationType>;
+  node: <T = ProductPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = ProductPreviousValuesPromise>() => T;
+}
+
+export interface ProductSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<ProductSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = ProductSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = ProductPreviousValuesSubscription>() => T;
+}
+
+export interface BatchPayload {
+  count: Long;
+}
+
+export interface BatchPayloadPromise
+  extends Promise<BatchPayload>,
+    Fragmentable {
+  count: () => Promise<Long>;
+}
+
+export interface BatchPayloadSubscription
+  extends Promise<AsyncIterator<BatchPayload>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Long>>;
 }
 
 export interface Activation {
   id: ID_Output;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
 }
 
 export interface ActivationPromise extends Promise<Activation>, Fragmentable {
   id: () => Promise<ID_Output>;
-  user: <T = UserPromise>() => T;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+  owner: <T = UserPromise>() => T;
   groups: <T = FragmentableArray<Group>>(
     args?: {
       where?: GroupWhereInput;
@@ -1801,7 +2287,9 @@ export interface ActivationSubscription
   extends Promise<AsyncIterator<Activation>>,
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
-  user: <T = UserSubscription>() => T;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  owner: <T = UserSubscription>() => T;
   groups: <T = Promise<AsyncIterator<GroupSubscription>>>(
     args?: {
       where?: GroupWhereInput;
@@ -1826,20 +2314,38 @@ export interface ActivationSubscription
   ) => T;
 }
 
-export interface ProductEdge {
-  cursor: String;
-}
+export interface UserConnection {}
 
-export interface ProductEdgePromise extends Promise<ProductEdge>, Fragmentable {
-  node: <T = ProductPromise>() => T;
-  cursor: () => Promise<String>;
-}
-
-export interface ProductEdgeSubscription
-  extends Promise<AsyncIterator<ProductEdge>>,
+export interface UserConnectionPromise
+  extends Promise<UserConnection>,
     Fragmentable {
-  node: <T = ProductSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<UserEdge>>() => T;
+  aggregate: <T = AggregateUserPromise>() => T;
+}
+
+export interface UserConnectionSubscription
+  extends Promise<AsyncIterator<UserConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<UserEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateUserSubscription>() => T;
+}
+
+export interface AggregateProduct {
+  count: Int;
+}
+
+export interface AggregateProductPromise
+  extends Promise<AggregateProduct>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateProductSubscription
+  extends Promise<AsyncIterator<AggregateProduct>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
 }
 
 export interface ActivationSubscriptionPayload {
@@ -1865,95 +2371,94 @@ export interface ActivationSubscriptionPayloadSubscription
   previousValues: <T = ActivationPreviousValuesSubscription>() => T;
 }
 
-export interface AggregateGroup {
-  count: Int;
+export interface ProductConnection {}
+
+export interface ProductConnectionPromise
+  extends Promise<ProductConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<ProductEdge>>() => T;
+  aggregate: <T = AggregateProductPromise>() => T;
 }
 
-export interface AggregateGroupPromise
-  extends Promise<AggregateGroup>,
+export interface ProductConnectionSubscription
+  extends Promise<AsyncIterator<ProductConnection>>,
     Fragmentable {
-  count: () => Promise<Int>;
-}
-
-export interface AggregateGroupSubscription
-  extends Promise<AsyncIterator<AggregateGroup>>,
-    Fragmentable {
-  count: () => Promise<AsyncIterator<Int>>;
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<ProductEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateProductSubscription>() => T;
 }
 
 export interface ActivationPreviousValues {
   id: ID_Output;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
 }
 
 export interface ActivationPreviousValuesPromise
   extends Promise<ActivationPreviousValues>,
     Fragmentable {
   id: () => Promise<ID_Output>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
 }
 
 export interface ActivationPreviousValuesSubscription
   extends Promise<AsyncIterator<ActivationPreviousValues>>,
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
-export interface GroupConnection {}
-
-export interface GroupConnectionPromise
-  extends Promise<GroupConnection>,
-    Fragmentable {
-  pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<GroupEdge>>() => T;
-  aggregate: <T = AggregateGroupPromise>() => T;
-}
-
-export interface GroupConnectionSubscription
-  extends Promise<AsyncIterator<GroupConnection>>,
-    Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<GroupEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateGroupSubscription>() => T;
-}
-
-export interface ProductSubscriptionPayload {
-  mutation: MutationType;
-  updatedFields?: String[];
-}
-
-export interface ProductSubscriptionPayloadPromise
-  extends Promise<ProductSubscriptionPayload>,
-    Fragmentable {
-  mutation: () => Promise<MutationType>;
-  node: <T = ProductPromise>() => T;
-  updatedFields: () => Promise<String[]>;
-  previousValues: <T = ProductPreviousValuesPromise>() => T;
-}
-
-export interface ProductSubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<ProductSubscriptionPayload>>,
-    Fragmentable {
-  mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = ProductSubscription>() => T;
-  updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = ProductPreviousValuesSubscription>() => T;
-}
-
-export interface CheckpointEdge {
+export interface GroupEdge {
   cursor: String;
 }
 
-export interface CheckpointEdgePromise
-  extends Promise<CheckpointEdge>,
-    Fragmentable {
-  node: <T = CheckpointPromise>() => T;
+export interface GroupEdgePromise extends Promise<GroupEdge>, Fragmentable {
+  node: <T = GroupPromise>() => T;
   cursor: () => Promise<String>;
 }
 
-export interface CheckpointEdgeSubscription
-  extends Promise<AsyncIterator<CheckpointEdge>>,
+export interface GroupEdgeSubscription
+  extends Promise<AsyncIterator<GroupEdge>>,
     Fragmentable {
-  node: <T = CheckpointSubscription>() => T;
+  node: <T = GroupSubscription>() => T;
   cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface ActivationEdge {
+  cursor: String;
+}
+
+export interface ActivationEdgePromise
+  extends Promise<ActivationEdge>,
+    Fragmentable {
+  node: <T = ActivationPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface ActivationEdgeSubscription
+  extends Promise<AsyncIterator<ActivationEdge>>,
+    Fragmentable {
+  node: <T = ActivationSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface AggregateCheckpoint {
+  count: Int;
+}
+
+export interface AggregateCheckpointPromise
+  extends Promise<AggregateCheckpoint>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateCheckpointSubscription
+  extends Promise<AsyncIterator<AggregateCheckpoint>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
 }
 
 export interface BraceletSubscriptionPayload {
@@ -1979,11 +2484,70 @@ export interface BraceletSubscriptionPayloadSubscription
   previousValues: <T = BraceletPreviousValuesSubscription>() => T;
 }
 
+export interface CheckpointConnection {}
+
+export interface CheckpointConnectionPromise
+  extends Promise<CheckpointConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<CheckpointEdge>>() => T;
+  aggregate: <T = AggregateCheckpointPromise>() => T;
+}
+
+export interface CheckpointConnectionSubscription
+  extends Promise<AsyncIterator<CheckpointConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<CheckpointEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateCheckpointSubscription>() => T;
+}
+
+export interface BraceletPreviousValues {
+  id: ID_Output;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
+  code: String;
+}
+
+export interface BraceletPreviousValuesPromise
+  extends Promise<BraceletPreviousValues>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+  code: () => Promise<String>;
+}
+
+export interface BraceletPreviousValuesSubscription
+  extends Promise<AsyncIterator<BraceletPreviousValues>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  code: () => Promise<AsyncIterator<String>>;
+}
+
+export interface AggregateCheck {
+  count: Int;
+}
+
+export interface AggregateCheckPromise
+  extends Promise<AggregateCheck>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateCheckSubscription
+  extends Promise<AsyncIterator<AggregateCheck>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
 export interface ProductPreviousValues {
   id: ID_Output;
   name: String;
   description: String;
-  checkLimit?: Int;
+  checklimit?: Int;
 }
 
 export interface ProductPreviousValuesPromise
@@ -1992,7 +2556,7 @@ export interface ProductPreviousValuesPromise
   id: () => Promise<ID_Output>;
   name: () => Promise<String>;
   description: () => Promise<String>;
-  checkLimit: () => Promise<Int>;
+  checklimit: () => Promise<Int>;
 }
 
 export interface ProductPreviousValuesSubscription
@@ -2001,41 +2565,135 @@ export interface ProductPreviousValuesSubscription
   id: () => Promise<AsyncIterator<ID_Output>>;
   name: () => Promise<AsyncIterator<String>>;
   description: () => Promise<AsyncIterator<String>>;
-  checkLimit: () => Promise<AsyncIterator<Int>>;
+  checklimit: () => Promise<AsyncIterator<Int>>;
 }
 
-export interface BraceletPreviousValues {
-  id: ID_Output;
-  code: String;
-}
+export interface CheckConnection {}
 
-export interface BraceletPreviousValuesPromise
-  extends Promise<BraceletPreviousValues>,
+export interface CheckConnectionPromise
+  extends Promise<CheckConnection>,
     Fragmentable {
-  id: () => Promise<ID_Output>;
-  code: () => Promise<String>;
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<CheckEdge>>() => T;
+  aggregate: <T = AggregateCheckPromise>() => T;
 }
 
-export interface BraceletPreviousValuesSubscription
-  extends Promise<AsyncIterator<BraceletPreviousValues>>,
+export interface CheckConnectionSubscription
+  extends Promise<AsyncIterator<CheckConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<CheckEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateCheckSubscription>() => T;
+}
+
+export interface CheckSubscriptionPayload {
+  mutation: MutationType;
+  updatedFields?: String[];
+}
+
+export interface CheckSubscriptionPayloadPromise
+  extends Promise<CheckSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = CheckPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = CheckPreviousValuesPromise>() => T;
+}
+
+export interface CheckSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<CheckSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = CheckSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = CheckPreviousValuesSubscription>() => T;
+}
+
+export interface Product {
+  id: ID_Output;
+  name: String;
+  description: String;
+  checklimit?: Int;
+}
+
+export interface ProductPromise extends Promise<Product>, Fragmentable {
+  id: () => Promise<ID_Output>;
+  name: () => Promise<String>;
+  description: () => Promise<String>;
+  activations: <T = FragmentableArray<Activation>>(
+    args?: {
+      where?: ActivationWhereInput;
+      orderBy?: ActivationOrderByInput;
+      skip?: Int;
+      after?: String;
+      before?: String;
+      first?: Int;
+      last?: Int;
+    }
+  ) => T;
+  checkpoint: <T = CheckpointPromise>() => T;
+  checklimit: () => Promise<Int>;
+}
+
+export interface ProductSubscription
+  extends Promise<AsyncIterator<Product>>,
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
-  code: () => Promise<AsyncIterator<String>>;
+  name: () => Promise<AsyncIterator<String>>;
+  description: () => Promise<AsyncIterator<String>>;
+  activations: <T = Promise<AsyncIterator<ActivationSubscription>>>(
+    args?: {
+      where?: ActivationWhereInput;
+      orderBy?: ActivationOrderByInput;
+      skip?: Int;
+      after?: String;
+      before?: String;
+      first?: Int;
+      last?: Int;
+    }
+  ) => T;
+  checkpoint: <T = CheckpointSubscription>() => T;
+  checklimit: () => Promise<AsyncIterator<Int>>;
 }
 
-export interface CheckEdge {
+export interface CheckPreviousValues {
+  id: ID_Output;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
+  timestamp: DateTimeOutput;
+}
+
+export interface CheckPreviousValuesPromise
+  extends Promise<CheckPreviousValues>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+  timestamp: () => Promise<DateTimeOutput>;
+}
+
+export interface CheckPreviousValuesSubscription
+  extends Promise<AsyncIterator<CheckPreviousValues>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  timestamp: () => Promise<AsyncIterator<DateTimeOutput>>;
+}
+
+export interface ProductEdge {
   cursor: String;
 }
 
-export interface CheckEdgePromise extends Promise<CheckEdge>, Fragmentable {
-  node: <T = CheckPromise>() => T;
+export interface ProductEdgePromise extends Promise<ProductEdge>, Fragmentable {
+  node: <T = ProductPromise>() => T;
   cursor: () => Promise<String>;
 }
 
-export interface CheckEdgeSubscription
-  extends Promise<AsyncIterator<CheckEdge>>,
+export interface ProductEdgeSubscription
+  extends Promise<AsyncIterator<ProductEdge>>,
     Fragmentable {
-  node: <T = CheckSubscription>() => T;
+  node: <T = ProductSubscription>() => T;
   cursor: () => Promise<AsyncIterator<String>>;
 }
 
@@ -2062,136 +2720,22 @@ export interface PageInfoSubscription
   endCursor: () => Promise<AsyncIterator<String>>;
 }
 
-export interface UserSubscriptionPayload {
-  mutation: MutationType;
-  updatedFields?: String[];
-}
+export interface GroupConnection {}
 
-export interface UserSubscriptionPayloadPromise
-  extends Promise<UserSubscriptionPayload>,
-    Fragmentable {
-  mutation: () => Promise<MutationType>;
-  node: <T = UserPromise>() => T;
-  updatedFields: () => Promise<String[]>;
-  previousValues: <T = UserPreviousValuesPromise>() => T;
-}
-
-export interface UserSubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<UserSubscriptionPayload>>,
-    Fragmentable {
-  mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = UserSubscription>() => T;
-  updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = UserPreviousValuesSubscription>() => T;
-}
-
-export interface CheckSubscriptionPayload {
-  mutation: MutationType;
-  updatedFields?: String[];
-}
-
-export interface CheckSubscriptionPayloadPromise
-  extends Promise<CheckSubscriptionPayload>,
-    Fragmentable {
-  mutation: () => Promise<MutationType>;
-  node: <T = CheckPromise>() => T;
-  updatedFields: () => Promise<String[]>;
-  previousValues: <T = CheckPreviousValuesPromise>() => T;
-}
-
-export interface CheckSubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<CheckSubscriptionPayload>>,
-    Fragmentable {
-  mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = CheckSubscription>() => T;
-  updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = CheckPreviousValuesSubscription>() => T;
-}
-
-export interface UserConnection {}
-
-export interface UserConnectionPromise
-  extends Promise<UserConnection>,
+export interface GroupConnectionPromise
+  extends Promise<GroupConnection>,
     Fragmentable {
   pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<UserEdge>>() => T;
-  aggregate: <T = AggregateUserPromise>() => T;
+  edges: <T = FragmentableArray<GroupEdge>>() => T;
+  aggregate: <T = AggregateGroupPromise>() => T;
 }
 
-export interface UserConnectionSubscription
-  extends Promise<AsyncIterator<UserConnection>>,
+export interface GroupConnectionSubscription
+  extends Promise<AsyncIterator<GroupConnection>>,
     Fragmentable {
   pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<UserEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateUserSubscription>() => T;
-}
-
-export interface CheckPreviousValues {
-  timestamp: DateTimeOutput;
-}
-
-export interface CheckPreviousValuesPromise
-  extends Promise<CheckPreviousValues>,
-    Fragmentable {
-  timestamp: () => Promise<DateTimeOutput>;
-}
-
-export interface CheckPreviousValuesSubscription
-  extends Promise<AsyncIterator<CheckPreviousValues>>,
-    Fragmentable {
-  timestamp: () => Promise<AsyncIterator<DateTimeOutput>>;
-}
-
-export interface ProductConnection {}
-
-export interface ProductConnectionPromise
-  extends Promise<ProductConnection>,
-    Fragmentable {
-  pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<ProductEdge>>() => T;
-  aggregate: <T = AggregateProductPromise>() => T;
-}
-
-export interface ProductConnectionSubscription
-  extends Promise<AsyncIterator<ProductConnection>>,
-    Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<ProductEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateProductSubscription>() => T;
-}
-
-export interface ActivationConnection {}
-
-export interface ActivationConnectionPromise
-  extends Promise<ActivationConnection>,
-    Fragmentable {
-  pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<ActivationEdge>>() => T;
-  aggregate: <T = AggregateActivationPromise>() => T;
-}
-
-export interface ActivationConnectionSubscription
-  extends Promise<AsyncIterator<ActivationConnection>>,
-    Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<ActivationEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateActivationSubscription>() => T;
-}
-
-export interface AggregateCheckpoint {
-  count: Int;
-}
-
-export interface AggregateCheckpointPromise
-  extends Promise<AggregateCheckpoint>,
-    Fragmentable {
-  count: () => Promise<Int>;
-}
-
-export interface AggregateCheckpointSubscription
-  extends Promise<AsyncIterator<AggregateCheckpoint>>,
-    Fragmentable {
-  count: () => Promise<AsyncIterator<Int>>;
+  edges: <T = Promise<AsyncIterator<GroupEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateGroupSubscription>() => T;
 }
 
 export interface CheckpointSubscriptionPayload {
@@ -2217,51 +2761,145 @@ export interface CheckpointSubscriptionPayloadSubscription
   previousValues: <T = CheckpointPreviousValuesSubscription>() => T;
 }
 
-export interface AggregateCheck {
-  count: Int;
+export interface User {
+  id: ID_Output;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
+  username: String;
+  password: String;
 }
 
-export interface AggregateCheckPromise
-  extends Promise<AggregateCheck>,
+export interface UserPromise extends Promise<User>, Fragmentable {
+  id: () => Promise<ID_Output>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+  username: () => Promise<String>;
+  password: () => Promise<String>;
+  createdGroups: <T = FragmentableArray<Group>>(
+    args?: {
+      where?: GroupWhereInput;
+      orderBy?: GroupOrderByInput;
+      skip?: Int;
+      after?: String;
+      before?: String;
+      first?: Int;
+      last?: Int;
+    }
+  ) => T;
+  activatedGroups: <T = FragmentableArray<Activation>>(
+    args?: {
+      where?: ActivationWhereInput;
+      orderBy?: ActivationOrderByInput;
+      skip?: Int;
+      after?: String;
+      before?: String;
+      first?: Int;
+      last?: Int;
+    }
+  ) => T;
+}
+
+export interface UserSubscription
+  extends Promise<AsyncIterator<User>>,
     Fragmentable {
-  count: () => Promise<Int>;
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  username: () => Promise<AsyncIterator<String>>;
+  password: () => Promise<AsyncIterator<String>>;
+  createdGroups: <T = Promise<AsyncIterator<GroupSubscription>>>(
+    args?: {
+      where?: GroupWhereInput;
+      orderBy?: GroupOrderByInput;
+      skip?: Int;
+      after?: String;
+      before?: String;
+      first?: Int;
+      last?: Int;
+    }
+  ) => T;
+  activatedGroups: <T = Promise<AsyncIterator<ActivationSubscription>>>(
+    args?: {
+      where?: ActivationWhereInput;
+      orderBy?: ActivationOrderByInput;
+      skip?: Int;
+      after?: String;
+      before?: String;
+      first?: Int;
+      last?: Int;
+    }
+  ) => T;
 }
 
-export interface AggregateCheckSubscription
-  extends Promise<AsyncIterator<AggregateCheck>>,
+export interface Bracelet {
+  id: ID_Output;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
+  code: String;
+}
+
+export interface BraceletPromise extends Promise<Bracelet>, Fragmentable {
+  id: () => Promise<ID_Output>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+  code: () => Promise<String>;
+  group: <T = GroupPromise>() => T;
+  checks: <T = FragmentableArray<Check>>(
+    args?: {
+      where?: CheckWhereInput;
+      orderBy?: CheckOrderByInput;
+      skip?: Int;
+      after?: String;
+      before?: String;
+      first?: Int;
+      last?: Int;
+    }
+  ) => T;
+}
+
+export interface BraceletSubscription
+  extends Promise<AsyncIterator<Bracelet>>,
     Fragmentable {
-  count: () => Promise<AsyncIterator<Int>>;
-}
-
-export interface AggregateUser {
-  count: Int;
-}
-
-export interface AggregateUserPromise
-  extends Promise<AggregateUser>,
-    Fragmentable {
-  count: () => Promise<Int>;
-}
-
-export interface AggregateUserSubscription
-  extends Promise<AsyncIterator<AggregateUser>>,
-    Fragmentable {
-  count: () => Promise<AsyncIterator<Int>>;
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  code: () => Promise<AsyncIterator<String>>;
+  group: <T = GroupSubscription>() => T;
+  checks: <T = Promise<AsyncIterator<CheckSubscription>>>(
+    args?: {
+      where?: CheckWhereInput;
+      orderBy?: CheckOrderByInput;
+      skip?: Int;
+      after?: String;
+      before?: String;
+      first?: Int;
+      last?: Int;
+    }
+  ) => T;
 }
 
 export interface GroupPreviousValues {
+  id: ID_Output;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
   code: String;
 }
 
 export interface GroupPreviousValuesPromise
   extends Promise<GroupPreviousValues>,
     Fragmentable {
+  id: () => Promise<ID_Output>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
   code: () => Promise<String>;
 }
 
 export interface GroupPreviousValuesSubscription
   extends Promise<AsyncIterator<GroupPreviousValues>>,
     Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   code: () => Promise<AsyncIterator<String>>;
 }
 
@@ -2288,55 +2926,28 @@ export interface GroupSubscriptionPayloadSubscription
   previousValues: <T = GroupPreviousValuesSubscription>() => T;
 }
 
-export interface Product {
-  id: ID_Output;
-  name: String;
-  description: String;
-  checkLimit?: Int;
-}
+export interface ActivationConnection {}
 
-export interface ProductPromise extends Promise<Product>, Fragmentable {
-  id: () => Promise<ID_Output>;
-  name: () => Promise<String>;
-  description: () => Promise<String>;
-  activations: <T = FragmentableArray<Activation>>(
-    args?: {
-      where?: ActivationWhereInput;
-      orderBy?: ActivationOrderByInput;
-      skip?: Int;
-      after?: String;
-      before?: String;
-      first?: Int;
-      last?: Int;
-    }
-  ) => T;
-  checkpoint: <T = CheckpointPromise>() => T;
-  checkLimit: () => Promise<Int>;
-}
-
-export interface ProductSubscription
-  extends Promise<AsyncIterator<Product>>,
+export interface ActivationConnectionPromise
+  extends Promise<ActivationConnection>,
     Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  name: () => Promise<AsyncIterator<String>>;
-  description: () => Promise<AsyncIterator<String>>;
-  activations: <T = Promise<AsyncIterator<ActivationSubscription>>>(
-    args?: {
-      where?: ActivationWhereInput;
-      orderBy?: ActivationOrderByInput;
-      skip?: Int;
-      after?: String;
-      before?: String;
-      first?: Int;
-      last?: Int;
-    }
-  ) => T;
-  checkpoint: <T = CheckpointSubscription>() => T;
-  checkLimit: () => Promise<AsyncIterator<Int>>;
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<ActivationEdge>>() => T;
+  aggregate: <T = AggregateActivationPromise>() => T;
+}
+
+export interface ActivationConnectionSubscription
+  extends Promise<AsyncIterator<ActivationConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<ActivationEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateActivationSubscription>() => T;
 }
 
 export interface CheckpointPreviousValues {
   id: ID_Output;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
   name: String;
 }
 
@@ -2344,6 +2955,8 @@ export interface CheckpointPreviousValuesPromise
   extends Promise<CheckpointPreviousValues>,
     Fragmentable {
   id: () => Promise<ID_Output>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
   name: () => Promise<String>;
 }
 
@@ -2351,99 +2964,91 @@ export interface CheckpointPreviousValuesSubscription
   extends Promise<AsyncIterator<CheckpointPreviousValues>>,
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   name: () => Promise<AsyncIterator<String>>;
 }
 
-export interface AggregateProduct {
+export interface UserSubscriptionPayload {
+  mutation: MutationType;
+  updatedFields?: String[];
+}
+
+export interface UserSubscriptionPayloadPromise
+  extends Promise<UserSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = UserPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = UserPreviousValuesPromise>() => T;
+}
+
+export interface UserSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<UserSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = UserSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = UserPreviousValuesSubscription>() => T;
+}
+
+export interface CheckEdge {
+  cursor: String;
+}
+
+export interface CheckEdgePromise extends Promise<CheckEdge>, Fragmentable {
+  node: <T = CheckPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface CheckEdgeSubscription
+  extends Promise<AsyncIterator<CheckEdge>>,
+    Fragmentable {
+  node: <T = CheckSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface CheckpointEdge {
+  cursor: String;
+}
+
+export interface CheckpointEdgePromise
+  extends Promise<CheckpointEdge>,
+    Fragmentable {
+  node: <T = CheckpointPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface CheckpointEdgeSubscription
+  extends Promise<AsyncIterator<CheckpointEdge>>,
+    Fragmentable {
+  node: <T = CheckpointSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface AggregateGroup {
   count: Int;
 }
 
-export interface AggregateProductPromise
-  extends Promise<AggregateProduct>,
+export interface AggregateGroupPromise
+  extends Promise<AggregateGroup>,
     Fragmentable {
   count: () => Promise<Int>;
 }
 
-export interface AggregateProductSubscription
-  extends Promise<AsyncIterator<AggregateProduct>>,
+export interface AggregateGroupSubscription
+  extends Promise<AsyncIterator<AggregateGroup>>,
     Fragmentable {
   count: () => Promise<AsyncIterator<Int>>;
 }
 
-export interface Bracelet {
-  id: ID_Output;
-  code: String;
-}
+/*
+The `ID` scalar type represents a unique identifier, often used to refetch an object or as key for a cache. The ID type appears in a JSON response as a String; however, it is not intended to be human-readable. When expected as an input type, any string (such as `"4"`) or integer (such as `4`) input value will be accepted as an ID.
+*/
+export type ID_Input = string | number;
+export type ID_Output = string;
 
-export interface BraceletPromise extends Promise<Bracelet>, Fragmentable {
-  id: () => Promise<ID_Output>;
-  code: () => Promise<String>;
-  group: <T = GroupPromise>() => T;
-  checks: <T = FragmentableArray<Check>>(
-    args?: {
-      where?: CheckWhereInput;
-      orderBy?: CheckOrderByInput;
-      skip?: Int;
-      after?: String;
-      before?: String;
-      first?: Int;
-      last?: Int;
-    }
-  ) => T;
-}
-
-export interface BraceletSubscription
-  extends Promise<AsyncIterator<Bracelet>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  code: () => Promise<AsyncIterator<String>>;
-  group: <T = GroupSubscription>() => T;
-  checks: <T = Promise<AsyncIterator<CheckSubscription>>>(
-    args?: {
-      where?: CheckWhereInput;
-      orderBy?: CheckOrderByInput;
-      skip?: Int;
-      after?: String;
-      before?: String;
-      first?: Int;
-      last?: Int;
-    }
-  ) => T;
-}
-
-export interface CheckpointConnection {}
-
-export interface CheckpointConnectionPromise
-  extends Promise<CheckpointConnection>,
-    Fragmentable {
-  pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<CheckpointEdge>>() => T;
-  aggregate: <T = AggregateCheckpointPromise>() => T;
-}
-
-export interface CheckpointConnectionSubscription
-  extends Promise<AsyncIterator<CheckpointConnection>>,
-    Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<CheckpointEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateCheckpointSubscription>() => T;
-}
-
-export interface GroupEdge {
-  cursor: String;
-}
-
-export interface GroupEdgePromise extends Promise<GroupEdge>, Fragmentable {
-  node: <T = GroupPromise>() => T;
-  cursor: () => Promise<String>;
-}
-
-export interface GroupEdgeSubscription
-  extends Promise<AsyncIterator<GroupEdge>>,
-    Fragmentable {
-  node: <T = GroupSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
-}
+export type Long = string;
 
 /*
 DateTime scalar input type, allowing Date
@@ -2455,28 +3060,20 @@ DateTime scalar output type, which is always a string
 */
 export type DateTimeOutput = string;
 
-export type Long = string;
-
 /*
 The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1. 
 */
 export type Int = number;
 
 /*
-The `ID` scalar type represents a unique identifier, often used to refetch an object or as key for a cache. The ID type appears in a JSON response as a String; however, it is not intended to be human-readable. When expected as an input type, any string (such as `"4"`) or integer (such as `4`) input value will be accepted as an ID.
+The `Boolean` scalar type represents `true` or `false`.
 */
-export type ID_Input = string | number;
-export type ID_Output = string;
+export type Boolean = boolean;
 
 /*
 The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.
 */
 export type String = string;
-
-/*
-The `Boolean` scalar type represents `true` or `false`.
-*/
-export type Boolean = boolean;
 
 /**
  * Model Metadata

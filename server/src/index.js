@@ -6,7 +6,7 @@ const schema = require('./schema')
 const server = new ApolloServer({
   schema,
   context: ({ req }) => ({
-    ...req,
+    request: req,
     prisma
   }),
   playground: process.env.NODE_ENV === 'development',

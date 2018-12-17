@@ -3,9 +3,9 @@ type Mutation {
   authenticate(data: AuthInput!): AuthPayload!
   createUser(data: UserCreateInput!): User!
   updateUser(data: UserUpdateInput! where: UserWhereUniqueInput!): User!
-  createCheckPoint(data: CheckpointCreateInput!): Checkpoint!
+  createCheckpoint(data: CheckpointCreateInput!): Checkpoint!
   createProduct(data: ProductCreateInput!): Product!
-  createBraceletGroups(data: [GroupCreateInput!]!): [Group!]!
+  createGroup(data: GroupCreateInput!): Group!
   createActivation(data: ActivationCreateInput!): Activation!
   createCheck(data: CheckCreateInput!): Check!
 }
@@ -33,7 +33,7 @@ input ProductCreateInput {
   name: String!
   description: String!
   checkpoint: CheckpointWhereUniqueInput!
-  checkLimit: Int
+  checklimit: Int
 }
 
 input ActivationCreateInput {
