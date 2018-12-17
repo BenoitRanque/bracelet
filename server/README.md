@@ -11,9 +11,9 @@ This file should be placed in the project root folder
 # Example .env file
 
 # Database configurations
-PG_USERNAME=wasp
-PG_PASSWORD=wasp
-PG_DATABASE=wasp
+PG_USERNAME=bracelet
+PG_PASSWORD=bracelet
+PG_DATABASE=bracelet
 # optional. use host.docker.internal to refer to host machine, else use postgres service name
 # PG_HOST=
 # optional. The port for our postgres database
@@ -23,9 +23,7 @@ PG_DATABASE=wasp
 # optional. used for administrative prisma tasks (deployement, migrations)
 PRISMA_MANAGEMENT_API_SECRET=PrimaManagmentSecret
 # example: http://host:4466/service/stage
-PRISMA_HOST=localhost
-PRISMA_SERVICE=wasp
-PRISMA_STAGE=dev
+PRISMA_ENDPOINT=http://localhost:4466/bracelet/dev
 # Used to access the Prisma API
 PRISMA_SECRET=PrismaSecret
 
@@ -34,9 +32,6 @@ PRISMA_SECRET=PrismaSecret
 APP_SECRET=ApplicationSecret
 # See BYCRYPT docs
 BCRYPT_SALT_ROUNDS=12
-# Location of ZKTime database file, used to load employee events
-ZKTIME_DB_PATH=dev_events_data
-ZKTIME_DB_FILE=ZKTimeNet.db
 
 ```
 ### 2. Deploy docker containers
@@ -117,9 +112,7 @@ You must create a .env.production file in the root directory
 # Prisma Configurations
 PRISMA_MANAGEMENT_API_SECRET=PrimaManagmentSecret
 # example: http://host:4466/service/stage
-PRISMA_HOST=wasp
-PRISMA_SERVICE=wasp
-PRISMA_STAGE=prod
+PRISMA_ENDPOINT=http://app:4466/bracelet/prod
 # Used to access the Prisma API
 PRISMA_SECRET=PrismaSecret
 

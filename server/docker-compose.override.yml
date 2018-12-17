@@ -1,18 +1,17 @@
 version: '3'
 services:
-  server:
-    image: server:dev
+  bracelet:
+    image: bracelet:dev
     build:
       args:
         NODE_ENV: development
     command: nodemon -L src/index.js
     environment:
       NODE_ENV: development
+      PRISMA_ENDPOINT: http://prisma:4466/bracelet/dev
     volumes:
       - .:/usr/app
       - /usr/app/node_modules
-      # - ./src:/usr/app/src
-      # - ./data:/usr/app/data
   postgres:
     volumes:
       - pgdata:/var/lib/postgresql/data/pgdata
