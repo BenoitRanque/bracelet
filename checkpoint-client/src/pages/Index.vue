@@ -1,8 +1,9 @@
 <template>
   <q-page class="flex flex-center">
-    <q-spinner-puff color="red" size="40vw"></q-spinner-puff>
+    <q-spinner-puff v-if="ready" color="blue" size="40vw"></q-spinner-puff>
+    <div v-else class="q-headline">Por favor configurar</div>
     <q-page-sticky position="top-right" :offset="[8, 8]">
-      <q-btn color="light" icon="settings" flat round dense/>
+      <q-btn @click="showSettings" color="light" icon="settings" flat round dense/>
     </q-page-sticky>
   </q-page>
 </template>
@@ -11,7 +12,7 @@
 </style>
 
 <script>
-import { gql } from 'graphql-tag'
+import { GraphQLClient } from 'graphql-request'
 
 export default {
   name: 'PageIndex',
@@ -21,16 +22,39 @@ export default {
     }
   },
   computed: {
+    ready () {
+      return this.endpoint && this.checkpoint
+    },
+    endpoint () {
+      return this.$q.localStorage.get.item('ENDPOINT_URL')
+    },
     checkpoint () {
-      return { id: '' }
+      return this.$q.localStorage.get.item('CHECKPOINT_NAME')
+    },
+    GraphQL () {
+      if (!this.endpoint) return null
+      return new GraphQLClient(this.endpoint)
     }
   },
   methods: {
+    showSettings () {
+      this.$q.dialog({
+        title: 'Confirmar',
+        ok: 'Ir a configuracion',
+        cancel: true
+      }).then(() => {
+        this.$router.push('/settings')
+      }).catch(() => {
+        // do nothing
+      })
+    },
     requestCheck ({ checkpoint, bracelet }) {
-      const request = gql`
-        mutation CheckBracelet ($checkpoint: ID! $bracelet: String!) {
+      if (!this.GraphQL) return
+
+      const query = `
+        mutation CheckBracelet ($checkpoint: String! $bracelet: String!) {
           check: createCheck(data: {
-            checkpoint: { id: $checkpoint }
+            checkpoint: { name: $checkpoint }
             bracelet: { code: $bracelet }
           }) {
             createdAt
@@ -39,7 +63,7 @@ export default {
               group {
                 activation {
                   products (where: {
-                    checkpoint: { id: $checkpoint }
+                    checkpoint: { name: $checkpoint }
                   }) {
                     name
                     description
@@ -50,6 +74,17 @@ export default {
           }
         }
       `
+
+      this.GraphQL.request(query, {
+        checkpoint,
+        bracelet
+      })
+        .then(response => {
+          console.log(response)
+        })
+        .catch(error => {
+          console.error(error)
+        })
     },
     scanFinished (bracelet) {
       this.requestCheck({

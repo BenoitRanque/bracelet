@@ -52,14 +52,20 @@ module.exports = function (ctx) {
         'QBtn',
         'QIcon',
         'QPageSticky',
-        'QSpinnerPuff'
+        'QSpinnerPuff',
+        'QList',
+        'QItem',
+        'QItemMain',
+        'QItemSide'
       ],
       directives: [
         'Ripple'
       ],
       // Quasar plugins
       plugins: [
-        'Notify'
+        'Notify',
+        'Dialog',
+        'LocalStorage'
       ]
       // iconSet: ctx.theme.mat ? 'material-icons' : 'ionicons'
       // i18n: 'de' // Quasar language
