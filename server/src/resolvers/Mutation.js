@@ -80,8 +80,10 @@ async function createCheck (obj, args, ctx, info) {
   ] = await Promise.all([
     ctx.prisma.client.$exists.bracelet(bracelet),
     ctx.prisma.client.checksConnection({
-      bracelet,
-      timestamp_lt: startOfDay(new Date())
+      where: {
+        bracelet,
+        timestamp_lt: startOfDay(new Date()).toISOString()
+      }
     }).aggregate().count(),
     ctx.prisma.client.$exists.bracelet({
       ...bracelet,
@@ -102,8 +104,10 @@ async function createCheck (obj, args, ctx, info) {
       }
     }),
     ctx.prisma.client.checksConnection({
-      bracelet,
-      checkpoint
+      where: {
+        bracelet,
+        checkpoint
+      }
     }).aggregate().count(),
     ctx.prisma.client.products({
       where: {
@@ -117,22 +121,15 @@ async function createCheck (obj, args, ctx, info) {
     })
   ])
 
-  // console.log(exists,
-  //   checksOnPreviousDatesCount,
-  //   isActivated,
-  //   isActivatedForCheckpoint,
-  //   checksAtCheckpointCount,
-  //   activatedProducts)
-
-  if (!exists) throw new Error(`Manilla ${bracelet} no existe`)
-  if (checksOnPreviousDatesCount > 0) throw new Error(`Manilla ${bracelet} ya fue utilizada en fechas anteriores`)
-  if (!isActivated) throw new Error(`Manilla ${bracelet} no activada`)
-  if (!isActivatedForCheckpoint) throw new Error(`Manilla ${bracelet} no cuenta con producto para este punto de control`)
+  if (!exists) throw new Error(`Manilla no existe`)
+  if (checksOnPreviousDatesCount > 0) throw new Error(`Manilla ya fue utilizada en fechas anteriores`)
+  if (!isActivated) throw new Error(`Manilla no activada`)
+  if (!isActivatedForCheckpoint) throw new Error(`Manilla no cuenta con producto para este punto de control`)
 
   const checkLimitForCheckpoint = activatedProducts
     .reduce((maxChecklimit, { checklimit }) => (checklimit === null || (maxChecklimit !== null && checklimit > maxChecklimi)) ? checklimit : maxChecklimit, 0)
 
-  if (checksAtCheckpointCount >= checkLimitForCheckpoint) throw new Error(`Cantidad de registros para manilla ${bracelet} en punto de control ${checkpoint} exedida`)
+  if (checkLimitForCheckpoint !== null && checksAtCheckpointCount >= checkLimitForCheckpoint) throw new Error(`Cantidad de registros para manilla ${bracelet} en punto de control ${checkpoint} exedida`)
 
   return ctx.prisma.bindings.mutation.createCheck({
     data: {
@@ -142,7 +139,7 @@ async function createCheck (obj, args, ctx, info) {
       checkpoint: {
         connect: args.data.checkpoint
       },
-      timestamp: new Date()
+      timestamp: new Date().toISOString()
     }
   }, info)
 }

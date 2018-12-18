@@ -1,7 +1,9 @@
 <template>
   <q-page class="flex flex-center">
-    <q-spinner-puff v-if="ready" color="blue" size="40vw"></q-spinner-puff>
-    <div v-else class="q-headline">Por favor configurar</div>
+    <div>
+      <q-spinner-rings v-if="ready" :color="statusColor" size="100vw" style="max-height: 50vh; max-width: 80vw;"></q-spinner-rings>
+      <div v-else class="q-headline">Por favor configurar servidor y punto de control antes de uso</div>
+    </div>
     <q-page-sticky position="top-right" :offset="[8, 8]">
       <q-btn @click="showSettings" color="light" icon="settings" flat round dense/>
     </q-page-sticky>
@@ -14,10 +16,14 @@
 <script>
 import { GraphQLClient } from 'graphql-request'
 
+const successAudio = new Audio('statics/success.mp3')
+const failureAudio = new Audio('statics/failure.mp3')
+
 export default {
   name: 'PageIndex',
   data () {
     return {
+      statusColor: 'blue',
       scanBuffer: ''
     }
   },
@@ -37,6 +43,42 @@ export default {
     }
   },
   methods: {
+    resetStatusColor () {
+      this.statusColor = 'blue'
+    },
+    success (response) {
+      this.statusColor = 'green'
+
+      successAudio.play()
+
+      const braceletCode = response.check.bracelet.code
+
+      const productNames = response.check.bracelet.group.activation.products.reduce((names, { name }) => {
+        names.push(name)
+        return names
+      }, [])
+
+      this.$q.notify({
+        type: 'positive',
+        message: `${braceletCode} ${productNames.join(', ')}`,
+        timeout: 4000,
+        // detail: 'Optional detail message.',
+        position: 'top' // 'top', 'left', 'bottom-left' etc
+      })
+    },
+    failure (error) {
+      this.statusColor = 'red'
+
+      failureAudio.play()
+
+      this.$q.notify({
+        type: 'negative',
+        message: error.response.errors.map(({ message }) => message).join(', '),
+        timeout: 6000,
+        // detail: 'Optional detail message.',
+        position: 'bottom' // 'top', 'left', 'bottom-left' etc
+      })
+    },
     showSettings () {
       this.$q.dialog({
         title: 'Confirmar',
@@ -57,7 +99,10 @@ export default {
             checkpoint: { name: $checkpoint }
             bracelet: { code: $bracelet }
           }) {
-            createdAt
+            timestamp
+            checkpoint {
+              name
+            }
             bracelet {
               code
               group {
@@ -79,12 +124,8 @@ export default {
         checkpoint,
         bracelet
       })
-        .then(response => {
-          console.log(response)
-        })
-        .catch(error => {
-          console.error(error)
-        })
+        .then(this.success)
+        .catch(this.failure)
     },
     scanFinished (bracelet) {
       this.requestCheck({
@@ -102,6 +143,8 @@ export default {
     }
   },
   created () {
+    successAudio.onended = this.resetStatusColor
+    failureAudio.onended = this.resetStatusColor
     window.addEventListener('keypress', this.scanInputHandler)
   },
   beforeDestroy () {

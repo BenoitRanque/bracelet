@@ -52,7 +52,7 @@ module.exports = function (ctx) {
         'QBtn',
         'QIcon',
         'QPageSticky',
-        'QSpinnerPuff',
+        'QSpinnerRings',
         'QList',
         'QItem',
         'QItemMain',
@@ -71,7 +71,11 @@ module.exports = function (ctx) {
       // i18n: 'de' // Quasar language
     },
     // animations: 'all' --- includes all animations
-    animations: [],
+    // animations: [],
+    animations: [
+      'bounceInLeft',
+      'bounceOutRight'
+    ],
     ssr: {
       pwa: false
     },
