@@ -127,7 +127,7 @@ async function createCheck (obj, args, ctx, info) {
   if (!isActivatedForCheckpoint) throw new Error(`Manilla no cuenta con producto para este punto de control`)
 
   const checkLimitForCheckpoint = activatedProducts
-    .reduce((maxChecklimit, { checklimit }) => (checklimit === null || (maxChecklimit !== null && checklimit > maxChecklimi)) ? checklimit : maxChecklimit, 0)
+    .reduce((maxChecklimit, { checklimit }) => (checklimit === null || (maxChecklimit !== null && checklimit > maxChecklimit)) ? checklimit : maxChecklimit, 0)
 
   if (checkLimitForCheckpoint !== null && checksAtCheckpointCount >= checkLimitForCheckpoint) throw new Error(`Cantidad de registros para manilla ${bracelet} en punto de control ${checkpoint} exedida`)
 
