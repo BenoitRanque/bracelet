@@ -42,11 +42,15 @@ export default {
   },
   watch: {
     checkpoint (value) {
-      this.$q.localStorage.set('CHECKPOINT_NAME', value)
+      if (value) {
+        this.$q.localStorage.set('CHECKPOINT_NAME', value)
+      }
     },
     endpoint (value) {
-      this.$q.localStorage.set('ENDPOINT_URL', value)
-      this.loadCheckpointOptions()
+      if (value && value.match(/^http:\/\/[\w\.]+:\d+/)) {
+        this.$q.localStorage.set('ENDPOINT_URL', value)
+        this.loadCheckpointOptions()
+      }
     }
   },
   methods: {
