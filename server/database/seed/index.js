@@ -8,6 +8,7 @@
     const users = await require('./users')(prisma)
     const checkpoints = await require('./checkpoints')(prisma)
     const products = await require('./products')(prisma, checkpoints)
+    const tests = await require('./tests')(prisma, users, checkpoints)
 
   } catch (error) {
     console.error(error)

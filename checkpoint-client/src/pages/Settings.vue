@@ -47,7 +47,7 @@ export default {
       }
     },
     endpoint (value) {
-      if (value && value.match(/^http:\/\/[\w\.]+:\d+/)) {
+      if (value && value.match(/^http:\/\/[\w.]+:\d+/)) {
         this.$q.localStorage.set('ENDPOINT_URL', value)
         this.loadCheckpointOptions()
       }

@@ -51,19 +51,24 @@ export default {
 
       successAudio.play()
 
-      const braceletCode = response.check.bracelet.code
+      // const braceletCode = response.check.bracelet.code
 
       const productNames = response.check.bracelet.group.activation.products.reduce((names, { name }) => {
         names.push(name)
         return names
       }, [])
 
+      const productDescriptions = response.check.bracelet.group.activation.products.reduce((descriptions, { description }) => {
+        descriptions.push(description)
+        return descriptions
+      }, [])
+
       this.$q.notify({
         type: 'positive',
-        message: `${braceletCode} ${productNames.join(', ')}`,
+        message: productNames.join(', '),
         timeout: 4000,
-        // detail: 'Optional detail message.',
-        position: 'top' // 'top', 'left', 'bottom-left' etc
+        detail: productDescriptions.join(', '),
+        position: 'top'
       })
     },
     failure (error) {
@@ -76,7 +81,7 @@ export default {
         message: error.response.errors.map(({ message }) => message).join(', '),
         timeout: 6000,
         // detail: 'Optional detail message.',
-        position: 'bottom' // 'top', 'left', 'bottom-left' etc
+        position: 'bottom'
       })
     },
     showSettings () {
