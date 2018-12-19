@@ -14,7 +14,7 @@ module.exports = async function (prisma, users, checkpoints) {
                 {
                   name: 'Test Product 1',
                   description: 'Ingreso Adulto',
-                  checkpoints: { connect: { name: 'INGRESO' } }
+                  checkpoint: { connect: { name: 'INGRESO' } }
                 }
               ]
             }
@@ -37,7 +37,7 @@ module.exports = async function (prisma, users, checkpoints) {
                 {
                   name: 'Test Product 2',
                   description: 'Buffet Adulto',
-                  checkpoints: { connect: { name: 'RESTAURANTE' } }
+                  checkpoint: { connect: { name: 'RESTAURANTE' } }
                 }
               ]
             }
@@ -61,7 +61,7 @@ module.exports = async function (prisma, users, checkpoints) {
                   name: 'Test Product 3',
                   description: 'Buffet Adulto limite 4 registros',
                   checklimit: 4,
-                  checkpoints: { connect: { name: 'RESTAURANTE' } }
+                  checkpoint: { connect: { name: 'RESTAURANTE' } }
                 }
               ]
             }
@@ -85,13 +85,13 @@ module.exports = async function (prisma, users, checkpoints) {
                   name: 'Test Product 4',
                   description: 'Buffet Adulto limite 4 registros',
                   checklimit: 4,
-                  checkpoints: { connect: { name: 'RESTAURANTE' } }
+                  checkpoint: { connect: { name: 'RESTAURANTE' } }
                 },
                 {
                   name: 'Test Product 5',
                   description: 'Postres ilimitados',
                   checklimit: null,
-                  checkpoints: { connect: { name: 'RESTAURANTE' } }
+                  checkpoint: { connect: { name: 'RESTAURANTE' } }
                 }
               ]
             }
@@ -115,13 +115,13 @@ module.exports = async function (prisma, users, checkpoints) {
                   name: 'Test Product 6',
                   description: 'Buffet Adulto 4 registros',
                   checklimit: 4,
-                  checkpoints: { connect: { name: 'RESTAURANTE' } }
+                  checkpoint: { connect: { name: 'RESTAURANTE' } }
                 },
                 {
                   name: 'Test Product 7',
                   description: 'Ingresos Adultos ilimitados',
                   checklimit: null,
-                  checkpoints: { connect: { name: 'INGRESO' } }
+                  checkpoint: { connect: { name: 'INGRESO' } }
                 }
               ]
             }
