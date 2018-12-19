@@ -129,7 +129,7 @@ async function createCheck (obj, args, ctx, info) {
   const checkLimitForCheckpoint = activatedProducts
     .reduce((maxChecklimit, { checklimit }) => (checklimit === null || (maxChecklimit !== null && checklimit > maxChecklimit)) ? checklimit : maxChecklimit, 0)
 
-  if (checkLimitForCheckpoint !== null && checksAtCheckpointCount >= checkLimitForCheckpoint) throw new Error(`Cantidad de registros para manilla ${bracelet} en punto de control ${checkpoint} exedida`)
+  if (checkLimitForCheckpoint !== null && checksAtCheckpointCount >= checkLimitForCheckpoint) throw new Error(`Cantidad de registros para manilla exedida`)
 
   return ctx.prisma.bindings.mutation.createCheck({
     data: {
